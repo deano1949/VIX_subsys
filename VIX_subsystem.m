@@ -3,6 +3,18 @@
 
 %% Load data
 clear;
+location='Coutts';
+
+    if strcmp(location,'Home')
+        addpath(genpath('C:\Users\Langyu\Desktop\Dropbox\GU\1.Investment\4. Alphas (new)'));
+        addpath(genpath('C:\Users\gly19\Dropbox\GU\1.Investment\4. Alphas (new)\Common_codes'));
+    elseif strcmp(location,'Coutts')
+        addpath(genpath('O:\langyu\Reading\AlgorithmTrading_Chan_(2013)\Custom_Functions'));
+        addpath('O:\langyu\Reading\AlgorithmTrading_Chan_(2013)');
+    else
+        error('Unrecognised location; Coutts or Home');
+    end
+
 load VIX_data.mat
 fstgeneric=VIX_data.Q.first_generic_price;
 sndgeneric=VIX_data.Q.second_generic_price;
@@ -39,20 +51,26 @@ if strcmp(blend_type,'Boostrap')
     %% Boostrap
     Signal=[CarryTrade.performance.dailyreturn EWMA_ST.performance.dailyreturn ...
             EWMA_MT.performance.dailyreturn EWMA_LT.performance.dailyreturn];
-     signal_sharp=[1.4 0.3 0.4 0.79]; %expected returns
+     signal_sharp=[CarryTrade.performance.sharpe_aftercost ...
+         EWMA_ST.performance.sharpe_aftercost ...
+         EWMA_MT.performance.sharpe_aftercost ...
+         EWMA_LT.performance.sharpe_aftercost]; %expected returns
      target_vol=0.2; %target volatility 20%
      
      SignalStruct=CV_block(Signal,200);
      [correl,weights]=Boostrap(SignalStruct,signal_sharp,target_vol);
-        
+     wgt=mean(weights,2);
+     
+     Signal=wgt(1)*CarryTrade.signal-(EWMA_ST.signal*wgt(2)+EWMA_MT.signal*wgt(3)+ ...
+         EWMA_LT.signal*wgt(4));
  %% Navie blending
-elseif strcmp(blend_type,'Navie') 
+elseif strcmp(blend_type,'Naive') 
     Signal=0.5*CarryTrade.signal-(EWMA_ST.signal+EWMA_MT.signal+EWMA_LT.signal)/3; %revert the signal of momentum strategy signal;
     diversification_multipler=2;
     Signal=Signal*diversification_multipler;
     Signal(Signal>20)=20;Signal(Signal<-20)=-20;
 end
 %% Trade simulation
-EntryThreshold=10;
+EntryThreshold=0.0001;
 ExitThreshold=0;
 VIXsubsys=TradeSim(sndgeneric,sndgeneric_ret,Signal,EntryThreshold,ExitThreshold,bidask_spread);

@@ -28,8 +28,8 @@ matt.signal=signal;
 
 %% estimate PNL & sharpe ratio
 zscore=signal;
-EntryThreshold=10;
-ExitThreshold=1;
+EntryThreshold=0.001;
+ExitThreshold=0.001;
 longsEntry=zscore > EntryThreshold; % a long position when signal is positive
 longsExit=zscore < ExitThreshold;
 

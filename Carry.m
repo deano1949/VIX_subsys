@@ -29,8 +29,8 @@ signal(signal>20)=20; signal(signal<-20)=-20; %capped at [-20,20];
 matt.signal=signal;
 %% estimate PNL & sharpe ratio
 zscore=signal;
-EntryThreshold=10;
-ExitThreshold=1;
+EntryThreshold=0.001;
+ExitThreshold=0.001;
 longsEntry=zscore < -EntryThreshold; % a long position when signal is negative
 longsExit=zscore > -ExitThreshold;
 
