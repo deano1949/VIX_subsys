@@ -1,0 +1,34 @@
+File to test sync with Github desktop.
+
+Hi Rob,
+
+Thank you so much for your book. It it very educative. I was trying to understand more about trading rules correlations in "Chapter 8: Combined Forecasts". You mentioned that back-testing the performance of trading rules to get correlation.
+
+Could you share a bit more insights on how you get the performance of trading rules, please?
+(1) Do you set buy/sell threshold at +/- 10? meaning that no position held when signal is [-10,10], only 1 position held when signal is [10,20] and [-20,-10] and 2 positions held when signal is at -20/+20?
+(2) Trading cost is considered? (I think the answer is yes.)
+(3) You entry a buy trade, say at signal=10. When do you signal to exit the trade? when signal<10 or signal=0?
+
+or you use dynamic positions, meaning the position varies with signal all the time.
+
+Another question regarding optimisation:
+In the formula: f*w - lemada*w*sigma*w' to estimate weights
+(1) f is rules' sharpe ratio calculated using the rules' historical performance pooled from all instruments or just the sharpe of the rule from the instrument we look at?
+(2) how do you define lemada? =0.0001? if so, is it always 0.0001?
+
+Sorry if those two questions had been asked before.
+
+Thanks,
+Deano
+----------------------------------------------------------
+Rob Carver has left a new comment on the post 
+
+To get the performance of a trading rule you run through the position sizing method in the book allocating 100% to a given trading rule.
+
+1) No, that isn't how the system works at all. Read the rest of the book before asking any more questions.
+2) yes - again this in discussed later in the book
+3) No, I use continous positions. You need to read chapter 7 again as you don't seem to have quite got the gist.
+
+f*w - lemada*w*sigma*w
+
+I don't think I've ever used this formula in my book, or on my blog, so I can't really explain it. 

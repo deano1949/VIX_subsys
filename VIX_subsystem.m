@@ -3,7 +3,7 @@
 
 %% Load data
 clear;
-location='Coutts';
+location='Home';
 
     if strcmp(location,'Home')
         addpath(genpath('C:\Users\Langyu\Desktop\Dropbox\GU\1.Investment\4. Alphas (new)'));
@@ -58,9 +58,8 @@ if strcmp(blend_type,'Boostrap')
      target_vol=0.2; %target volatility 20%
      
      SignalStruct=CV_block(Signal,200);
-     [correl,weights]=Boostrap(SignalStruct,signal_sharp,target_vol);
-     wgt=mean(weights,2);
-     
+     [correl,wgt]=Boostrap(SignalStruct,signal_sharp,target_vol);
+   
      Signal=wgt(1)*CarryTrade.signal-(EWMA_ST.signal*wgt(2)+EWMA_MT.signal*wgt(3)+ ...
          EWMA_LT.signal*wgt(4));
  %% Navie blending

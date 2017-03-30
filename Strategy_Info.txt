@@ -1,0 +1,12 @@
+Futures Trading
+
+Trading bits---------------------
+
+(1) Contract roll at 4th days before contract expiry.
+(2) Optimal trading time: Trade before US close at 21:00pm.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+|	Tips for VIX Futures
+|1	VIX futures contract end of date price is recorded at 21:10. after 21:10 the trading volume is dying. Literally VIX futures closes at 21:10.
+|2	At each contract expiry date, VIX is only traded until 13:55 and volume is low.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------

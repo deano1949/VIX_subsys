@@ -19,13 +19,9 @@ for i=1:sz
     %correlation
     sum_corr=sum_corr+corr(dat);%sum of correlation
     %optimal weights
-    lamada=100*2;
-    H=cov(dat)*lamada;%covariance of input
-    Aeq=ones(1,nfactor);beq=1;%all weights add up to 1
-    lb=zeros(1,nfactor); ub=ones(1,nfactor);%all weights must be between [0,1];
-    x(:,i)=quadprog(H,-signal_sharp,[],[],Aeq,beq,lb,ub);
+    x(:,i)=optimiser(dat,'maxsr');% 'maxsr','minvar'
     i
 end
 
 correl=sum_corr/sz;%average correlation
-weights=x;
+weights=mean(x,2);
