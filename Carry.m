@@ -1,4 +1,4 @@
-function matt= Carry(x,xret,xnear,gap,bidask_spread,forecastscalar)
+function matt= Carry(x,xret,carrysignal,bidask_spread,forecastscalar)
 %CARRY Summary:
 %   x: trade contract price(Sep 17 contract)
 %   xret: generic contract price
@@ -8,16 +8,7 @@ function matt= Carry(x,xret,xnear,gap,bidask_spread,forecastscalar)
 %        annualised_turnover: turnover
 %        Perf: performance matrix (ret,APR,SR,CumPNL,MaxDD)
 
-return_spread=(xnear-x)./x; %return differential
-
-%Distance
-if strcmp(gap,'M') 
-    distance=1/12; 
-elseif strcmp(gap,'Q') 
-    distance=1/4; %traded quarterly
-end
-
-net_expret=return_spread/distance; %net expected return in price units
+net_expret=carrysignal; %net expected return (annualised carry)
 
 stdev_ret=smartMovingStd(xret,25)*sqrt(250);%annualised stdev/ 25 is recommended
 
