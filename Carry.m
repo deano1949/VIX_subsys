@@ -8,7 +8,7 @@ function matt= Carry(x,xret,xnear,gap,bidask_spread,forecastscalar)
 %        annualised_turnover: turnover
 %        Perf: performance matrix (ret,APR,SR,CumPNL,MaxDD)
 
-return_spread=(x-xnear)./x; %return differential
+return_spread=(xnear-x)./x; %return differential
 
 %Distance
 if strcmp(gap,'M') 
@@ -28,7 +28,7 @@ signal(signal>20)=20; signal(signal<-20)=-20; %capped at [-20,20];
 
 matt.signal=signal;
 %% estimate PNL & sharpe ratio
-zscore=signal;
+zscore=-signal;
 EntryThreshold=0.001;
 ExitThreshold=0.001;
 longsEntry=zscore < -EntryThreshold; % a long position when signal is negative
