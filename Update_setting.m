@@ -1,3 +1,6 @@
+Amyaddpath('Home');
+
+%List of strategies
 StratName={'EWMAC_2_8','EWMAC_4_16','EWMAC_8_32','EWMAC_16_64','EWMAC_32_128','EWMAC_64_256',...
       'carry'};
 
@@ -32,7 +35,11 @@ EWMAC_64_256=7.5;
 Carry=10;
 setting.Turnover=table(EWMAC_2_8,EWMAC_4_16,EWMAC_8_32,EWMAC_16_64,EWMAC_32_128,EWMAC_64_256,Carry);
 
+%General
+setting.target_vol=0.2; %target volatility
 
-
+%Trading Timestamp 
+load EquityData_RollT-1.mat
+setting.timestamp=EquityData.SPX.timestamp;
 
 save('Setting.mat','setting');
