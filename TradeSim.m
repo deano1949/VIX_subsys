@@ -16,11 +16,11 @@ function matt= TradeSim(x,xret,zscore,EntryThreshold,ExitThreshold,bidask_spread
 % ExitThreshold=1;
 %-----------------
 
-longsEntry=zscore < -EntryThreshold; % a long position when signal is positive
-longsExit=zscore > -ExitThreshold;
+longsEntry=zscore > EntryThreshold; % a long position when signal is positive
+longsExit=zscore < ExitThreshold;
 
-shortsEntry=zscore > EntryThreshold;
-shortsExit=zscore < ExitThreshold;
+shortsEntry=zscore < -EntryThreshold;
+shortsExit=zscore > -ExitThreshold;
 
 numUnitsLong=NaN(length(x), 1);
 numUnitsShort=NaN(length(x), 1);
@@ -53,5 +53,7 @@ Perf.maxdd=maxdrawdown(100*cumprod(1+ret)); %maxdrawdown since inception
 
 matt.performance=Perf; %performance matrix
 
+%% rolling daily volatility (25days simple moving average)
+matt.vol=smartMovingStd(ret,25);
 end
 
