@@ -20,7 +20,6 @@ for i=1:sz
     sum_corr=sum_corr+corr(dat);%sum of correlation
     %optimal weights
     x(:,i)=optimiser(dat,'maxsr');% 'maxsr','minvar'
-    i
 end
 
 correl=sum_corr/sz;%average correlation

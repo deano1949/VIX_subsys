@@ -10,10 +10,12 @@ function matt = EWMAC(x,xret,fast,slow,bidask_spread,forecastscalar)
 %Output: singal: volatility adjusted EWMA crossover
 %        annualised_turnover: turnover
 %        Perf: performance matrix (APR,SR,CumPNL,MaxDD)
-
-ewma_fast=tsmovavg(x,'e',fast,1);
-
-ewma_slow=tsmovavg(x,'e',slow,1);
+nants=x(isnan(x));
+x_exnan=x(~isnan(x)); 
+ewma_fast=tsmovavg(x_exnan,'e',fast,1);
+ewma_slow=tsmovavg(x_exnan,'e',slow,1);
+ewma_fast=[nants; ewma_fast];
+ewma_slow=[nants; ewma_slow];
 
 raw_ewma_crossover=ewma_fast-ewma_slow; %macd crossing
 

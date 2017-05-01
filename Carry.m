@@ -1,9 +1,9 @@
-function matt= Carry(x,xret,carrysignal,bidask_spread,forecastscalar)
+function matt= Carry(x,xret,carrysignal,distance,bidask_spread,forecastscalar)
 %CARRY Summary:
 %   x: trade contract price(Sep 17 contract)
 %   xret: generic contract price
-%   xnear: nearer contract (June 17 contract)
-%   gap: time difference between x and xnear 'M' or 'Q'
+%   carrysignal: annualised carry signal
+%   distance: frequency of rolling contracts (1/12 = monthly)
 %Output: singal: carry trade
 %        annualised_turnover: turnover
 %        Perf: performance matrix (ret,APR,SR,CumPNL,MaxDD)
@@ -19,14 +19,14 @@ signal(signal>20)=20; signal(signal<-20)=-20; %capped at [-20,20];
 
 matt.signal=signal;
 %% estimate PNL & sharpe ratio
-zscore=-signal;
+zscore=signal;
 EntryThreshold=0.001;
 ExitThreshold=0.001;
-longsEntry=zscore < -EntryThreshold; % a long position when signal is negative
-longsExit=zscore > -ExitThreshold;
+longsEntry=zscore > EntryThreshold; % a long position when signal is positive
+longsExit=zscore < ExitThreshold;
 
-shortsEntry=zscore > EntryThreshold;
-shortsExit=zscore < ExitThreshold;
+shortsEntry=zscore < -EntryThreshold;
+shortsExit=zscore > -ExitThreshold;
 
 numUnitsLong=NaN(length(x), 1);
 numUnitsShort=NaN(length(x), 1);
