@@ -9,9 +9,13 @@ if strcmp(opttype,'minvar') && nargir==3
     lb=zeros(1,nfactor); ub=ones(1,nfactor);%all weights must be between [0,1];
     x=quadprog(H,-signal_sharp,[],[],Aeq,beq,lb,ub);
 elseif strcmp(opttype,'maxsr') && nargin==2
-    x=MaxSharpeR(dat);%maximise sharpe ratio
+    try
+        x=MaxSharpeR(dat);%maximise sharpe ratio
+    catch
+        x=ones(1,size(dat,2))*1/size(dat,2);
+    end
 else
-    error('No defined optimisation tyep');
+    error('No defined optimisation type');
 end
 
 
