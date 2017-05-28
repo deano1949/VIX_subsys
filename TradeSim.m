@@ -1,4 +1,4 @@
-function matt= TradeSim(x,xret,zscore,EntryThreshold,ExitThreshold,bidask_spread)
+function matt= TradeSim(x,xret,type,zscore,EntryThreshold,ExitThreshold,bidask_spread,varargin)
 %TRADESIM Summary :  back-test the trading signal and PNL
 %%INPUT:    x: instrument price
 %           xret: instrument daily return
@@ -6,6 +6,7 @@ function matt= TradeSim(x,xret,zscore,EntryThreshold,ExitThreshold,bidask_spread
 %           EntryThreshold: enter position threshold
 %           ExitThreshold: exit position threshold
 %           bidask_spread: trading spread
+%           varargin : 'longonly' & 'shortonly'
 %%OUTPUT    
 %           annualised_turnover: turnover
 %           Perf: performance matrix (ret,APR,SR,CumPNL,MaxDD)
@@ -15,12 +16,40 @@ function matt= TradeSim(x,xret,zscore,EntryThreshold,ExitThreshold,bidask_spread
 % EntryThreshold=10;
 % ExitThreshold=1;
 %-----------------
+if nargin<8
+    varargin={''};
+end
 
-longsEntry=zscore > EntryThreshold; % a long position when signal is positive
-longsExit=zscore < ExitThreshold;
+if strcmp(type,'MoM')
+    longsEntry=zscore > EntryThreshold; % a long position when signal is positive
+    longsExit=zscore < ExitThreshold;
 
-shortsEntry=zscore < -EntryThreshold;
-shortsExit=zscore > -ExitThreshold;
+    shortsEntry=zscore < -EntryThreshold;
+    shortsExit=zscore > -ExitThreshold;
+
+    if strcmp(varargin{1},'longonly')
+        shortsEntry=zscore < -99999;
+        shortsExit=zscore > 99999;
+    elseif strcmp(varargin{1},'shortonly')
+        longsEntry=zscore > 99999;
+        longsExit=zscore < -99999;
+    end
+
+elseif strcmp(type,'MR')
+    longsEntry=zscore < -EntryThreshold; 
+    longsExit=zscore > -ExitThreshold;
+
+    shortsEntry=zscore > EntryThreshold;
+    shortsExit=zscore < ExitThreshold;
+
+    if strcmp(varargin{1},'longonly')
+        shortsEntry=zscore > 99999;
+        shortsExit=zscore < -99999;
+    elseif strcmp(varargin{1},'shortonly')
+        longsEntry=zscore < -99999;
+        longsExit=zscore > 99999;
+    end
+end
 
 numUnitsLong=NaN(length(x), 1);
 numUnitsShort=NaN(length(x), 1);

@@ -25,16 +25,6 @@ EWMAC_64_256=7.5;
 Carry=10;
 setting.Turnover=table(EWMAC_2_8,EWMAC_4_16,EWMAC_8_32,EWMAC_16_64,EWMAC_32_128,EWMAC_64_256,Carry);
 
-%Tunrover (annualised)--------------------
-EWMAC_2_8=54;
-EWMAC_4_16=28;
-EWMAC_8_32=16;
-EWMAC_16_64=11;
-EWMAC_32_128=8.5;
-EWMAC_64_256=7.5;
-Carry=10;
-setting.Turnover=table(EWMAC_2_8,EWMAC_4_16,EWMAC_8_32,EWMAC_16_64,EWMAC_32_128,EWMAC_64_256,Carry);
-
 %General
 setting.target_vol=0.2; %target volatility
 

@@ -7,7 +7,7 @@ function VIXsubsys=Subsystem_VIX()
 % Amyaddpath('Home');
 
 load EquityData_RollT-1.mat
-fstgeneric=EquityData.VIX.Generic123Price.UX1_Index;
+% fstgeneric=EquityData.VIX.Generic123Price.UX1_Index;
 sndgeneric=EquityData.VIX.Generic123Price.UX2_Index;
 sndgeneric_ret=EquityData.VIX.Generic12Return.G2ret;
 FutRollFreq=1/12;

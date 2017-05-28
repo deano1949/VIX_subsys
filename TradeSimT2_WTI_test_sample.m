@@ -13,8 +13,8 @@ bidask_spread=0.0003;
 contract_size=50;
 weight=ones(size(x,1),1);
 
-signal=ComdtyData.WTI.Carry;
-
-
-
-matt= TradeSimT2(AUM,vol_target,contract_size,x,xret,signal,vol,fx,weight,diversifer,bidask_spread);
+carrysignal=ComdtyData.WTI.Carry;
+matt= Carry(x,xret,carrysignal,1/12,bidask_spread,1/mean(abs(carrysignal)));
+signal=matt.signal;
+matt2= TradeSimT2(AUM,vol_target,contract_size,x,xret,signal,vol,fx,weight,diversifer,bidask_spread);
+matt3= TradeSimT3(x,xret,vol_target,vol,signal,bidask_spread);
