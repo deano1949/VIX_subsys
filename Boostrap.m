@@ -1,4 +1,4 @@
-function [correl,weights]=Boostrap(cv_struct,signal_sharp,target_vol)
+function [correl,weights,dm]=Boostrap(cv_struct,signal_sharp,target_vol)
 %%Description: To use boostrap to generate optimal weights and correlation 
 %between signals or instruments
 %Input: cv_struct: struct of data that generated from CV_block.m
@@ -6,6 +6,7 @@ function [correl,weights]=Boostrap(cv_struct,signal_sharp,target_vol)
 %       target_vol: target volatility
 %Output: corr: correlation between inputs(signals or instruments)
 %        weights: optimal weights of inputs (for trading use only)
+%        dm: diversifed multiplier
 fname=fieldnames(cv_struct);
 sz=size(fname,1);
 
@@ -24,3 +25,11 @@ end
 
 correl=sum_corr/sz;%average correlation
 weights=mean(x,2);
+% diversified multiplier
+dm=1/sqrt(weights'*correl*weights);%diversifed multiplier
+%capped dm in range of [1,2.5];
+if dm<1
+    dm=1;
+elseif dm>2.5
+    dm=2.5;
+end

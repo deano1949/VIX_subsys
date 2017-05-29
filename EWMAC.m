@@ -1,4 +1,4 @@
-function matt = EWMAC(x,xret,fast,slow,bidask_spread,forecastscalar)
+function matt = EWMAC(x,xret,fast,slow,bidask_spread,vol_target,vol,forecastscalar)
 %EWMAC calculates the exponential weighted moving averages (EWMA) trading
 %rule
 %Input: x: time series of instrument
@@ -6,6 +6,8 @@ function matt = EWMAC(x,xret,fast,slow,bidask_spread,forecastscalar)
 %       fast: time period of fast lag
 %       slow: time period of slow lag
 %       bidask_spread: trading cost % term
+%   vol_target: annaulised volatility target (default at 20%)
+%   vol: daily volatility of instrument (default at 25days simple moving
 %       forecastscalar: forecast scalar
 %Output: singal: volatility adjusted EWMA crossover
 %        annualised_turnover: turnover
@@ -19,54 +21,25 @@ ewma_slow=[nants; ewma_slow];
 
 raw_ewma_crossover=ewma_fast-ewma_slow; %macd crossing
 
-expectRet=raw_ewma_crossover./x; %return of macd crossing;
 
-stdev=[NaN;smartMovingStd(tick2ret(x),25)]; %Volatility/ 25 is recommended
+if strcmp(vol,'')
+    vol=smartMovingStd(xret,25);
+end
 
-signal=expectRet./stdev*forecastscalar; %unscaled signal
+expectRet=raw_ewma_crossover./x./vol; %unscaled signal;
+
+if strcmp(forecastscalar,'')
+    forecastscalar=10/mean(abs(expectRet(~isnan(expectRet))));
+end
+
+signal=expectRet*forecastscalar; %scaled signal
 signal(signal>20)=20;signal(signal<-20)=-20;
 
+%% Generate performance
+matt= TradeSimT3(x,xret,vol_target,vol,signal,bidask_spread);
+
+%% Output
 matt.signal=signal;
 
-%% estimate PNL & sharpe ratio
-zscore=signal;
-EntryThreshold=0.001;
-ExitThreshold=0.001;
-longsEntry=zscore > EntryThreshold; % a long position when signal is positive
-longsExit=zscore < ExitThreshold;
-
-shortsEntry=zscore < -EntryThreshold;
-shortsExit=zscore > -ExitThreshold;
-
-numUnitsLong=NaN(length(x), 1);
-numUnitsShort=NaN(length(x), 1);
-
-numUnitsLong(1)=0;
-numUnitsLong(longsEntry)=1; 
-numUnitsLong(longsExit)=0;
-numUnitsLong=fillMissingData(numUnitsLong); % backfill data with previous day's value
-
-numUnitsShort(1)=0;
-numUnitsShort(shortsEntry)=-1; 
-numUnitsShort(shortsExit)=0;
-numUnitsShort=fillMissingData(numUnitsShort);
-
-numUnits=numUnitsLong+numUnitsShort;
-
-%% estimate turnover
-tradeswitch=numUnits~=backshift(1,numUnits);tradeswitch(1)=0; %trade takes place
-matt.annualised_turnover=ceil(sum(tradeswitch)/size(numUnits,1)*252);%estimated number of trades per year
-
-%% PNL and Sharpe ratio
-trading_cost=tradeswitch*bidask_spread; %trading costs
-ret=lag(numUnits, 1).*xret-lag(trading_cost,1); % daily P&L of the strategy
-ret(isnan(ret))=0;
-Perf.dailyreturn=ret;%
-Perf.cumpnl=cumprod(1+ret)-1; %Accumulative PNL
-Perf.apr=prod(1+ret).^(252/length(ret))-1; %annualised returns since inception
-Perf.sharpe_aftercost=mean(ret)*sqrt(252)/std(ret); %sharpe ratio since inception
-Perf.maxdd=maxdrawdown(100*cumprod(1+ret)); %maxdrawdown since inception
-
-matt.performance=Perf; %performance matrix
 end
 

@@ -9,6 +9,10 @@ function matt= TradeSimT3(x,xret,vol_target,vol,signal,bidask_spread)
 %
 
 %% PNL and Sharpe ratio
+if strcmp(vol,'')
+    vol=smartMovingStd(xret,25);
+end
+
 vol_target=vol_target/sqrt(252); %convert to daily volatility target
 pos=vol_target.*backshift(1,signal)./(backshift(1,vol)*10);%position: no of contracts/shares
 ret=pos.*xret; %signal @ 10 means normal buy signal, we assume buy 1 contract; hence why divded by 10
@@ -16,10 +20,15 @@ ret(isnan(ret))=0;
 
 %% estimate turnover
 turnover=abs(pos-backshift(1,pos));turnover(isnan(turnover))=0; %turnover = signal differenial
-matt.annualised_turnover=ceil(sum(turnover)/size(pos,1)*252);%estimated turnover per year
+annualised_turnover=ceil(sum(turnover)/size(pos,1)*252);%estimated turnover per year
 tc=turnover.*bidask_spread; %transaction costs
 ret=ret-tc;
 
+%cost in SR units
+matt.annualised_costSR=costSR(bidask_spread, annualised_turnover, xret);
+%annualised turnover
+matt.annualised_turnover=annualised_turnover;
+%%
 Perf.dailyreturn=ret;%
 Perf.cumpnl=cumprod(1+ret)-1; %Accumulative PNL
 Perf.apr=prod(1+ret).^(252/length(ret))-1; %annualised returns since inception
