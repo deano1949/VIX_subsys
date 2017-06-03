@@ -83,6 +83,7 @@ end
      
 %% Trade simulation
 Subsys=TradeSimT3(x,xret,vol_target,'',Signal,bidask_spread);
+Subsys.name=dat.name;
 Subsys.Signal=Signal;
 Subsys.timestamp=dat.timestamp;
 Subsys.stratsblending=Blend;
