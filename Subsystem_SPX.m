@@ -1,4 +1,6 @@
 function SPXsubsys=Subsystem_SPX()
+%% Legacy Legacy Legacy %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Following Rob's System to create a subsystem for VIX futures (mean-reversion + momentum)
 % Trade the second front contract
 

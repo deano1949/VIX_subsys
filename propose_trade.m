@@ -10,9 +10,10 @@ subsys_pos=cash_vol_target./dollar_vol.*forecast/10;
 
 desired_pos=subsys_pos.*weight.*diversifer;
 if isnan(desired_pos)
-    desired_pos=0;
+    desired_pos=zeros(1,size(desired_pos,2));
 else
     desired_pos=round(desired_pos);
+    desired_pos(isnan(desired_pos))=0;
 end
 
 end

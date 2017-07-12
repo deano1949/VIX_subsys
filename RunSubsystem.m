@@ -39,53 +39,78 @@ carrysignal=dat.Carry; %annualised carry
 CarryTrade= Carry(x,xret,carrysignal,bidask_spread,vol_target,vol,forecastscalar);
 %% MACD
 %EWMA_16_64
-EWMA_ST=EWMAC(x,xret,8,32,bidask_spread,vol_target,vol,forecastscalar);
+EWMA_ST=EWMAC(x,xret,16,64,bidask_spread,vol_target,vol,forecastscalar);
 
 %EWMA_32_128
-EWMA_MT=EWMAC(x,xret,16,64,bidask_spread,vol_target,vol,forecastscalar);
+EWMA_MT=EWMAC(x,xret,32,128,bidask_spread,vol_target,vol,forecastscalar);
 
 %EWMA_64_256
-EWMA_LT=EWMAC(x,xret,32,128,bidask_spread,vol_target,vol,forecastscalar);
+EWMA_LT=EWMAC(x,xret,64,256,bidask_spread,vol_target,vol,forecastscalar);
+
+%% Sharpe Ratio
+%SR_60
+SR_ST=SharpeRatio(x,xret,60,bidask_spread,vol_target,vol,forecastscalar);
+
+%SR_130
+SR_MT=SharpeRatio(x,xret,130,bidask_spread,vol_target,vol,forecastscalar);
+
+%SR_250
+SR_LT=SharpeRatio(x,xret,250,bidask_spread,vol_target,vol,forecastscalar);
 
 %% Signal blending
 % blend_type='Naive';
 if strcmp(blend_type,'Boostrap') 
     %% Boostrap
     alphas=[CarryTrade.performance.dailyreturn EWMA_ST.performance.dailyreturn ...
-            EWMA_MT.performance.dailyreturn EWMA_LT.performance.dailyreturn];
+            EWMA_MT.performance.dailyreturn EWMA_LT.performance.dailyreturn ...
+            SR_ST.performance.dailyreturn SR_MT.performance.dailyreturn ...
+            SR_LT.performance.dailyreturn];
+        
      signal_sharp=[CarryTrade.performance.sharpe_aftercost ...
          EWMA_ST.performance.sharpe_aftercost ...
          EWMA_MT.performance.sharpe_aftercost ...
-         EWMA_LT.performance.sharpe_aftercost]; %expected returns
+         EWMA_LT.performance.sharpe_aftercost ...
+         SR_ST.performance.sharpe_aftercost ...
+         SR_MT.performance.sharpe_aftercost ...
+         SR_LT.performance.sharpe_aftercost]; %expected returns
      
      SignalStruct=CV_block(alphas,100,30,10);
      [correl,wgt,dm]=Boostrap(SignalStruct,signal_sharp,vol_target);
    
-     Signal=[CarryTrade.signal EWMA_ST.signal EWMA_MT.signal EWMA_LT.signal];
-     Signal=Signal*wgt*dm; %combined signal
-     Signal(Signal>20)=20;Signal(Signal<-20)=-20;
+     Signal=[CarryTrade.signal EWMA_ST.signal EWMA_MT.signal EWMA_LT.signal ...
+         SR_ST.signal SR_MT.signal SR_LT.signal];
+     SignalTot=Signal*wgt*dm; %combined signal
+     SignalTot(SignalTot>20)=20;SignalTot(SignalTot<-20)=-20;
 
     %% Navie blending
 elseif strcmp(blend_type,'Naive') 
-    wgt=[0.5 1/3 1/3 1/3];
-    Signal=[CarryTrade.signal EWMA_ST.signal EWMA_MT.signal EWMA_LT.signal]*wgt'; %revert the signal of momentum strategy signal;
-    dm=2;
-    Signal=Signal*dm;
-    Signal(Signal>20)=20;Signal(Signal<-20)=-20;
-    correl=NaN;
-    alphas=NaN;
+     wgt=[1/3 1/9 1/9 1/9 1/9 1/9 1/9];
+     Signal=[CarryTrade.signal EWMA_ST.signal EWMA_MT.signal EWMA_LT.signal ...
+         SR_ST.signal SR_MT.signal SR_LT.signal];
+     dm=2;
+     SignalTot=Signal*dm*wgt';
+     SignalTot(SignalTot>20)=20;SignalTot(SignalTot<-20)=-20; %combined signal
+     correl=NaN;
+     alphas=NaN;
 end
- Blend.Name=blend_type;
- Blend.Stratsreturn=alphas;
- Blend.Weights=wgt;
- Blend.Correl=correl;
- Blend.DiversifedMultiplier=dm;
-     
+Blend.Name=blend_type;
+Blend.Stratsreturn=alphas;
+Blend.Weights=wgt;
+Blend.Correl=correl;
+Blend.DiversifedMultiplier=dm;
+
+%For output
+Signal=array2table(Signal,'VariableNames',{'Carry','EWMA_ST','EWMA_MT','EWMA_LT', ...
+    'SR_ST','SR_MT','SR_LT'});
+CurrentStatus=table;
+CurrentStatus.timestamp=dat.timestamp(end,:);
+CurrentStatus.Combined_signal=SignalTot(end);
+CurrentStatus=horzcat(CurrentStatus,Signal(end,:));
 %% Trade simulation
-Subsys=TradeSimT3(x,xret,vol_target,'',Signal,bidask_spread);
+Subsys=TradeSimT3(x,xret,vol_target,'',SignalTot,bidask_spread);
 Subsys.name=dat.name;
-Subsys.Signal=Signal;
+Subsys.Signal=SignalTot;
+Subsys.StratSignal=Signal;
 Subsys.timestamp=dat.timestamp;
 Subsys.stratsblending=Blend;
-Subsys.CurrentStatus.signal=Signal(end);
-Subsys.CurrentStatus.timestamp=dat.timestamp(end,:);
+Subsys.CurrentStatus=CurrentStatus;

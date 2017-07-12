@@ -5,10 +5,11 @@ Amyaddpath('Home');
 
 load Setting.mat
 vol_target=setting.target_vol;
+load FamilySubsys.mat
 %% Subsystems
-VIXsubsys=Subsystem_VIX(); 
-SPXsubsys=Subsystem_SPX(); 
-WTIsubsys=Subsystem_WTI(); 
+VIXsubsys=FamilySubsys.Subsystem_VIX; 
+SPXsubsys=FamilySubsys.Subsystem_SPX; 
+WTIsubsys=FamilySubsys.Subsystem_WTI; 
 
 %subsystems' return time series
 MultiSubsysMat=collate(VIXsubsys,SPXsubsys,WTIsubsys);
@@ -16,4 +17,4 @@ MultiSubsysMat=collate(VIXsubsys,SPXsubsys,WTIsubsys);
 %generate weights of subsystems
 sys=genSubsyswgt(MultiSubsysMat,vol_target);
 
-save SYS_beta.mat sys
+save SYS_beta.m at sys

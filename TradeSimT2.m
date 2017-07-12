@@ -19,19 +19,20 @@ pos_val(1,:)=[AUM zeros(1,size(x,2))]; %@ start of a day
 for i=2:size(x,1)
     cash_vol_target=PI(i-1)*vol_target/sqrt(252);
     stdev=vol(i-1,:);
-    price=x(i-1,:);
+    price=x(i-1,:); price(isnan(price))=0;
     forecast=signal(i-1,:);
     fxrate=fx(i-1,:);
     w=weight(i-1,:);
     desired_pos(i,:) = propose_trade(stdev,contract_size,price,forecast,fxrate,cash_vol_target,w,diversifer);
     tc=sum(abs((desired_pos(i,:)-desired_pos(i-1,:))).*contract_size.*price.*bidask_spread); %transaction cost
     pos_val(i,2:end)=desired_pos(i,:).*price.*contract_size.*xret(i,:); %active positions value (pnl for futures)
+    pos_val(isnan(pos_val))=0; %remove nan
     if tc~=0
         pos_val(i,1)=pos_val(i-1,1)-tc; %cash value
     else
         pos_val(i,1)=pos_val(i-1,1);
     end
-    PI(i)=pos_val(i,1)+sum(pos_val(1:i,2:end));%-----------------------------------------
+    PI(i)=sum(pos_val(i,:),2);%-----------------------------------------
 end    
 
 

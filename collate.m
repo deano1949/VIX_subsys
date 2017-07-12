@@ -17,18 +17,18 @@ ts2=subsys2.performance.dailyreturn;
 name=vertcat(subsys1.name, subsys2.name);
 mat=NaN(size(timenum,1),nargin);
 
-[~,id]=ismember(t1(1),timenum);
-mat(id:end,1)=ts1;
-[~,id]=ismember(t2(1),timenum);
-mat(id:end,2)=ts2;
+lookupts=tsvlookup(timenum,t1,ts1); %vlookup on timenum
+mat(:,1)=lookupts(:,2);
+lookupts=tsvlookup(timenum,t2,ts2); 
+mat(:,2)=lookupts(:,2);
 
-if length(varargin)>1
+if length(varargin)>=1
     for i=1:length(varargin)
         subsysi=varargin{i};
         t=datenum(subsysi.timestamp,'dd/mm/yyyy');
-        [~,id]=ismember(t(1),timenum);
-        mat(id:end,2+i)=subsysi.performance.dailyreturn;
-        name=vertcat(name,sybsysi.name);
+        lookupts=tsvlookup(timenum,t,subsysi.performance.dailyreturn);
+        mat(:,2+i)=lookupts(:,2);
+        name=vertcat(name,subsysi.name);
     end
 end
 

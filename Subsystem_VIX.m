@@ -1,4 +1,6 @@
 function Subsys=Subsystem_VIX()
+%% Legacy Legacy Legacy %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Following Rob's System to create a subsystem for VIX futures (mean-reversion + momentum)
 % Trade the second front contract
 
@@ -6,7 +8,7 @@ function Subsys=Subsystem_VIX()
 % clear;
 % Amyaddpath('Home');
 
-load EquityData_RollT-1.mat
+load('O:\langyu\Reading\Systematic_Trading_RobCarver\Futures Generic\EquityData_RollT-1.mat')
 % fstgeneric=EquityData.VIX.Generic123Price.UX1_Index;
 sndgeneric=EquityData.VIX.Generic123Price.UX2_Index;
 sndgeneric_ret=EquityData.VIX.Generic12Return.G2ret;
