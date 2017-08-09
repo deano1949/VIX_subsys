@@ -51,7 +51,6 @@ for i=1:length(listF)
     signalmat(:,i)=signalts(:,2);
     volts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),smartMovingStd(subsysdat.Generic12Return.(2),25));
     volmat(:,i)=volts(:,2);
-
 end
 
 fx=repmat([1 1 1],size(timenum,1),1);
