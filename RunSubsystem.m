@@ -34,29 +34,54 @@ if strcmp(vol,'')
 end
 
 forecastscalar='';
+%% Strategies parameters load up
+name=strcat('Tune',dat.name);
+try
+    dir='C:\Users\gly19\Dropbox\GU\1.Investment\4. Alphas (new)\17.Extract_Rollyield\0.Research\VIX\dat\';
+    load(strcat(dir,'TuningOutput.mat'));
+catch
+    dir='O:\langyu\Reading\Systematic_Trading_RobCarver\VIX subsystem\';
+    load(strcat(dir,'TuningOutput.mat'));
+end
+eval(['tunepara=' name]);
+
 %% Carry Trade
 carrysignal=dat.Carry; %annualised carry
 CarryTrade= Carry(x,xret,carrysignal,bidask_spread,vol_target,vol,forecastscalar);
 %% MACD
-%EWMA_16_64
-EWMA_ST=EWMAC(x,xret,16,64,bidask_spread,vol_target,vol,forecastscalar);
-
-%EWMA_32_128
-EWMA_MT=EWMAC(x,xret,32,128,bidask_spread,vol_target,vol,forecastscalar);
-
-%EWMA_64_256
-EWMA_LT=EWMAC(x,xret,64,256,bidask_spread,vol_target,vol,forecastscalar);
-
+try
+    tpewma=table2array(tunepara.EWMAC.Optimal_Parameter); %Optimal parameter for EWMA
+    EWMA_ST=EWMAC(x,xret,tpewma(1,1),tpewma(2,1),bidask_spread,vol_target,vol,forecastscalar);
+    EWMA_MT=EWMAC(x,xret,tpewma(1,2),tpewma(2,2),bidask_spread,vol_target,vol,forecastscalar);
+    EWMA_LT=EWMAC(x,xret,tpewma(1,3),tpewma(2,3),bidask_spread,vol_target,vol,forecastscalar);
+catch
+    EWMA_ST.performance.dailyreturn=zeros(size(x)); %set up empty shells in case EWMA is a non-profitable strategy
+    EWMA_ST.performance.sharpe_aftercost=0;
+    EWMA_ST.signal=zeros(size(x));
+    EWMA_MT.performance.dailyreturn=zeros(size(x));
+    EWMA_MT.performance.sharpe_aftercost=0;
+    EWMA_MT.signal=zeros(size(x));    
+    EWMA_LT.performance.dailyreturn=zeros(size(x));
+    EWMA_LT.performance.sharpe_aftercost=0;
+    EWMA_LT.signal=zeros(size(x));
+end
 %% Sharpe Ratio
-%SR_60
-SR_ST=SharpeRatio(x,xret,60,bidask_spread,vol_target,vol,forecastscalar);
-
-%SR_130
-SR_MT=SharpeRatio(x,xret,130,bidask_spread,vol_target,vol,forecastscalar);
-
-%SR_250
-SR_LT=SharpeRatio(x,xret,250,bidask_spread,vol_target,vol,forecastscalar);
-
+try
+    tpsr=table2array(tunepara.SharpeRatio.Optimal_Parameter); %optimal parameter for SharpeRatio
+    SR_ST=SharpeRatio(x,xret,tpsr(1),bidask_spread,vol_target,vol,forecastscalar);
+    SR_MT=SharpeRatio(x,xret,tpsr(2),bidask_spread,vol_target,vol,forecastscalar);
+    SR_LT=SharpeRatio(x,xret,tpsr(3),bidask_spread,vol_target,vol,forecastscalar);
+catch
+    SR_ST.performance.dailyreturn=zeros(size(x)); %set up empty shells in case SR is a non-profitable strategy
+    SR_ST.performance.sharpe_aftercost=0;
+    SR_ST.signal=zeros(size(x));
+    SR_MT.performance.dailyreturn=zeros(size(x));
+    SR_MT.performance.sharpe_aftercost=0;
+    SR_MT.signal=zeros(size(x));    
+    SR_LT.performance.dailyreturn=zeros(size(x));
+    SR_LT.performance.sharpe_aftercost=0;
+    SR_LT.signal=zeros(size(x));
+end   
 %% Signal blending
 % blend_type='Naive';
 if strcmp(blend_type,'Boostrap') 

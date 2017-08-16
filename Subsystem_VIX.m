@@ -36,6 +36,12 @@ EWMA_MT=EWMAC(sndgeneric,sndgeneric_ret,16,64,bidask_spread,vol_target,'','');
 
 %EWMA_64_256
 EWMA_LT=EWMAC(sndgeneric,sndgeneric_ret,32,128,bidask_spread,vol_target,'','');
+sndgeneric_ret(isnan(sndgeneric_ret))=0;
+ts=ret2tick(sndgeneric_ret)*100;
+EWMA_LT2=EWMAC(ts(2:end),sndgeneric_ret,32,128,bidask_spread,vol_target,'','');
+
+retts=[0;tick2ret(sndgeneric)];
+EWMA_LT3=EWMAC(sndgeneric,retts,32,128,bidask_spread,vol_target,'','');
 
 %% Signal blending
 blend_type='Boostrap';

@@ -14,7 +14,7 @@ t1=datenum(subsys1.timestamp,'dd/mm/yyyy');
 t2=datenum(subsys2.timestamp,'dd/mm/yyyy');
 ts1=subsys1.performance.dailyreturn;
 ts2=subsys2.performance.dailyreturn;
-name=vertcat(subsys1.name, subsys2.name);
+name=vertcat({subsys1.name}, {subsys2.name});
 mat=NaN(size(timenum,1),nargin);
 
 lookupts=tsvlookup(timenum,t1,ts1); %vlookup on timenum
@@ -28,7 +28,7 @@ if length(varargin)>=1
         t=datenum(subsysi.timestamp,'dd/mm/yyyy');
         lookupts=tsvlookup(timenum,t,subsysi.performance.dailyreturn);
         mat(:,2+i)=lookupts(:,2);
-        name=vertcat(name,subsysi.name);
+        name=vertcat(name,{subsysi.name});
     end
 end
 
@@ -39,7 +39,12 @@ for i=1:size(mat,2)
     mat(1:k-1,i)=NaN;
 end
 
+%% Covert to weekly timeseries for correlation calculation
+DailyTS=fints(datenum(timestamp,'dd/mm/yyyy'),mat);
+WeekTS=toweekly(DailyTS);
+
 output.name=name;
 output.ts=mat;
 output.timestamp=timestamp;
-
+output.weekts=fts2mat(WeekTS);
+output.weektimestamp=WeekTS.dates;

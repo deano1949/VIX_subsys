@@ -23,13 +23,14 @@ end
 %% Setup
 AUM=1000000;
 vol_target=0.2;
-listF={'SPX','VIX','WTI'};
+listF={'SPX','VIX','WTI','USZC'};
 listSubsysdat=struct;
 listSubsysdat.(listF{1})=EquityData.SPX;
 listSubsysdat.(listF{2})=EquityData.VIX;
 listSubsysdat.(listF{3})=ComdtyData.WTI;
+listSubsysdat.(listF{4})=Bond10YData.USZC;
 
-contract_size=[50 1000 1000];
+contract_size=[50 1000 1000 50]; %dummy to be automate
 
 timestamp=setting.timestamp;
 timenum=datenum(timestamp,'dd/mm/yyyy');
@@ -53,10 +54,10 @@ for i=1:length(listF)
     volmat(:,i)=volts(:,2);
 end
 
-fx=repmat([1 1 1],size(timenum,1),1);
+fx=repmat([1 1 1 1],size(timenum,1),1);
 weight=repmat(transpose(sys.wgts),size(timenum,1),1); %instrument weights
 diversifer=1;
-bidask_spread=[0.00001 0.00001 0.00001];
+bidask_spread=[0.0001 0.0003 0.0003 0.0003];%dummy to be automate
 
 matt= TradeSimT2(AUM,vol_target,contract_size,xmat,xretmat,signalmat,...
     volmat,fx,weight,diversifer,bidask_spread);

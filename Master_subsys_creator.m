@@ -3,10 +3,14 @@
 %(very computational heavy and time consuming, think before run!)
 
 %% selection dialog
-listF={'VIX','SPX','TSX','UKX','CAC','DAX','IBEX','MIB','AEX','OMX','SMI','NKY','HIA','AS51'};
+listF={'VIX','SPX','TSX','UKX','CAC','DAX','IBEX','MIB','AEX','OMX','SMI','NKY','HIA','AS51',...
+    'Brent','Gasoil','WTI','UnlGasoline','HeatingOil','NatGas','Cotton','Coffee','Coca','Sugar',...
+    'KanasaWheat','Corn','Wheat','LeanHogs','FeederCattle','LiveCattle','Gold','Silver','Aluminum',...
+    'Nickel','Lead','Zinc','Copper',....
+    'USZC','AUSZC','CAZC','GERZC','UKZC','JPZC'};
 [selection,ok]=listdlg('ListString',listF);
 
-loc='C';
+loc='';
 if ok==1
 %% Load data
 load FamilySubsys.mat
@@ -26,16 +30,17 @@ load FamilySubsys.mat
     end
     vol_target=setting.target_vol;
     vol='';
-    blend_type='Naive';%'Boostrap' or 'Naive'
+    blend_type='Boostrap';%'Boostrap' or 'Naive'
 
 %% Generate Subsystem
-
+%% Equity
     %VIX
     if ismember(1,selection)
         dat=EquityData.VIX;
         x=EquityData.VIX.Generic123Price.UX2_Index;
         xret=EquityData.VIX.Generic12Return.G2ret;
-        bidask_spread=0.0001;
+        x=ret2tick(xret,100);x=x(2:end);
+        bidask_spread=0.001;
         Subsystem=RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_',listF{1}))=Subsystem;
         save FamilySubsys.mat FamilySubsys
@@ -46,6 +51,7 @@ load FamilySubsys.mat
         dat=EquityData.SPX;
         x=EquityData.SPX.Generic123Price.SP1_Index;
         xret=EquityData.SPX.Generic12Return.G1ret;
+        x=ret2tick(xret,100);x=x(2:end);
         bidask_spread=0.0001;
         Subsystem_SPX=RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_',listF{2}))=Subsystem_SPX;
@@ -57,7 +63,7 @@ load FamilySubsys.mat
         dat=EquityData.TSX;
         x=dat.Generic123Price.(1);
         xret=dat.Generic12Return.(1);
-        bidask_spread=0.0001;
+        bidask_spread=0.005;
         Subsystem=RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_',listF{3}))=Subsystem;
         save FamilySubsys.mat FamilySubsys
@@ -90,7 +96,7 @@ load FamilySubsys.mat
         dat=EquityData.DAX;
         x=dat.Generic123Price.(1);
         xret=dat.Generic12Return.(1);
-        bidask_spread=0.0001;
+        bidask_spread=0.005;
         Subsystem=RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_',listF{6}))=Subsystem;
         save FamilySubsys.mat FamilySubsys
@@ -183,6 +189,34 @@ load FamilySubsys.mat
         FamilySubsys.(strcat('Subsystem_',listF{14}))=Subsystem;
         save FamilySubsys.mat FamilySubsys
     end
+
+%% Commodity
+    %WTI
+    no=17;
+    if ismember(no,selection)
+        dat=ComdtyData.WTI;
+        x=ComdtyData.WTI.Generic123Price.CL2_Comdty;
+        xret=ComdtyData.WTI.Generic12Return.G2ret;
+        x=ret2tick(xret,100);x=x(2:end);
+        bidask_spread=0.001;
+        Subsystem=RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
+        FamilySubsys.(strcat('Subsystem_',listF{no}))=Subsystem;
+        save FamilySubsys.mat FamilySubsys
+    end
+%% Fixed Income 10Y Bonds
+    %USZC
+    no=38;
+    if ismember(no,selection)
+        dat=Bond10YData.USZC;
+        %x=Bond10YData.USZC.Generic123Price.TY1_Comdty;
+        xret=Bond10YData.USZC.Generic12Return.G1ret;
+        x=ret2tick(xret,100);x=x(2:end);
+        bidask_spread=0.0003;
+        Subsystem=RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
+        FamilySubsys.(strcat('Subsystem_',listF{no}))=Subsystem;
+        save FamilySubsys.mat FamilySubsys
+    end
+    
 FamilySubsys.info.updated_date=datestr(now);
 FamilySubsys.info.blended_method=blend_type;
 FamilySubsys.info.vol_target=vol_target;

@@ -10,11 +10,11 @@ load FamilySubsys.mat
 VIXsubsys=FamilySubsys.Subsystem_VIX; 
 SPXsubsys=FamilySubsys.Subsystem_SPX; 
 WTIsubsys=FamilySubsys.Subsystem_WTI; 
-
+USZCsubsys=FamilySubsys.Subsystem_USZC; 
 %subsystems' return time series
-MultiSubsysMat=collate(VIXsubsys,SPXsubsys,WTIsubsys);
+MultiSubsysMat=collate(VIXsubsys,SPXsubsys,WTIsubsys,USZCsubsys); 
 
 %generate weights of subsystems
 sys=genSubsyswgt(MultiSubsysMat,vol_target);
 
-save SYS_beta.m at sys
+save SYS_beta.mat sys

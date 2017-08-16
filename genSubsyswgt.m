@@ -7,7 +7,7 @@ function sys=genSubsyswgt(MultiSubsysMat,vol_target)
 blend_type='Boostrap';
 if strcmp(blend_type,'Boostrap') 
     %% Boostrap
-     rettsStruct=CV_block(MultiSubsysMat.ts,100,30,20);
+     rettsStruct=CV_block(MultiSubsysMat.weekts,100,30,20);
      [correl,wgt]=Boostrap(rettsStruct,'',vol_target);
 else
     error('not ready');

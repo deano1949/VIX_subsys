@@ -17,8 +17,11 @@ for i=1:sz
     name=fname{i};
     dat=cv_struct.(name);
     dat=riskadjusted_return(dat,target_vol); %risk adjusted returns
+    dat(isnan(dat))=0;
     %correlation
-    sum_corr=sum_corr+corr(dat);%sum of correlation
+    corrmtx=corrcoef(dat); corrmtx(isnan(corrmtx))=0; 
+    corrmtx=corrmtx+eye(nfactor);corrmtx(corrmtx==2)=1; %remove NaN in correlation matrix
+    sum_corr=sum_corr+corrmtx;%sum of correlation
     %optimal weights
     x(:,i)=optimiser(dat,'maxsr');% 'maxsr','minvar'
 end
