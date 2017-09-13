@@ -1,14 +1,14 @@
 %% Output optimal weights in the portfolio of subsystems
 
 clear;
-Amyaddpath('Home');
+% Amyaddpath('Home');
 
 load Setting.mat
 vol_target=setting.target_vol;
 load FamilySubsys.mat
 %% Subsystems
 VIXsubsys=FamilySubsys.Subsystem_VIX; 
-SPXsubsys=FamilySubsys.Subsystem_SPX; 
+SPXsubsys=FamilySubsys.Subsystem_SPX;
 WTIsubsys=FamilySubsys.Subsystem_WTI; 
 USZCsubsys=FamilySubsys.Subsystem_USZC; 
 %subsystems' return time series

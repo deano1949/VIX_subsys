@@ -53,9 +53,10 @@ for i=1:length(listF)
     volts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),smartMovingStd(subsysdat.Generic12Return.(2),25));
     volmat(:,i)=volts(:,2);
 end
-
+sys.wgts=[0.25 0.3 0.2 0.25];
 fx=repmat([1 1 1 1],size(timenum,1),1);
 weight=repmat(transpose(sys.wgts),size(timenum,1),1); %instrument weights
+% weight=sys.wgts;
 diversifer=1;
 bidask_spread=[0.0001 0.0003 0.0003 0.0003];%dummy to be automate
 % bidask_spread=[0.000 0.000 0.000 0.000];%dummy to be automate

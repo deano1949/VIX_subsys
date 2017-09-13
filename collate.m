@@ -41,7 +41,7 @@ end
 
 %% Covert to weekly timeseries for correlation calculation
 DailyTS=fints(datenum(timestamp,'dd/mm/yyyy'),mat);
-WeekTS=toweekly(DailyTS);
+WeekTS=fintsconvt(DailyTS,'ret','toweekly');
 
 output.name=name;
 output.ts=mat;

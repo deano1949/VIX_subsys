@@ -24,8 +24,6 @@ end
 signal=raw_carry*forecastscalar;
 signal(signal>20)=20; signal(signal<-20)=-20; %capped at [-20,20];
 
-
-
 %% Generate performance
 matt= TradeSimT3(x,xret,vol_target,vol,signal,bidask_spread);
 

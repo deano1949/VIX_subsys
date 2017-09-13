@@ -13,6 +13,7 @@ else
     load('Setting.mat');
 
 end
+load Setting.mat
 
 TuningOutput=struct;
 %% Equity %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -20,9 +21,9 @@ TuningOutput=struct;
 
 vixpricedat=EquityData.VIX.Generic123Price.UX1_Index; %price
 vixretdat=EquityData.VIX.Generic12Return.G1ret; %return
-
-[TuneVIX.SharpeRatio.Optimal_Parameter,TuneVIX.SharpeRatio.AvgCorrel,TuneVIX.SharpeRatio.meansharpe]=SharpeRatio_Tuning(vixretdat);
-[TuneVIX.EWMAC.Optimal_Parameter,TuneVIX.EWMAC.AvgCorrel,TuneVIX.EWMAC.meansharpe]=EWMAC_Tuning(vixretdat);
+bid_ask_spread=setting.BidAskSpread.VIX;
+[TuneVIX.SharpeRatio.Optimal_Parameter,TuneVIX.SharpeRatio.AvgCorrel,TuneVIX.SharpeRatio.meansharpe]=SharpeRatio_Tuning(vixretdat,bid_ask_spread);
+[TuneVIX.EWMAC.Optimal_Parameter,TuneVIX.EWMAC.AvgCorrel,TuneVIX.EWMAC.meansharpe]=EWMAC_Tuning(vixretdat,bid_ask_spread);
 
 save('TuningOutput.mat','TuneVIX','-append');
 

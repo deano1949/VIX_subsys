@@ -38,6 +38,6 @@ Perf.maxdd=maxdrawdown(100*cumprod(1+ret)); %maxdrawdown since inception
 matt.performance=Perf; %performance matrix
 
 %% rolling daily volatility (25days simple moving average)
-matt.vol=smartMovingStd(ret,25);
+matt.dailyvol=smartMovingStd(ret,25);
 end
 

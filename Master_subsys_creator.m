@@ -40,7 +40,7 @@ load FamilySubsys.mat
         x=EquityData.VIX.Generic123Price.UX2_Index;
         xret=EquityData.VIX.Generic12Return.G2ret;
         x=ret2tick(xret,100);x=x(2:end);
-        bidask_spread=0.001;
+        bidask_spread=0.035;
         Subsystem=RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_',listF{1}))=Subsystem;
         save FamilySubsys.mat FamilySubsys

@@ -1,8 +1,8 @@
 %% This script is to select best SharpeRatio model periods parameters.
 
-function [Optimal_Parameter,AvgCorrel,meansharpe]=SharpeRatio_Tuning(fstgenericret)
+function [Optimal_Parameter,AvgCorrel,meansharpe]=SharpeRatio_Tuning(fstgenericret,bid_ask_spread)
 %Input: fstgeneric: return time series
-%
+%       bid_ask_spread: of instrument
 %Output: Optimal_Parameter: suggested optimal parameter
 %        AvgCorrel: average correlation between parameter sets
 %        AvgSharpe: sharpe of parameter sets
@@ -22,7 +22,7 @@ for i=1:size(listname,1)
     tsmtx=[];
     j=1;
     for period=5:5:250
-        mat=SharpeRatio(ts,[0;retts],period,0.0003,0.2,'','');
+        mat=SharpeRatio(ts,[0;retts],period,bid_ask_spread,0.2,'','');
         tsmtx=horzcat(tsmtx,mat.performance.dailyreturn);
         sharpemtx(i,j)=mat.performance.sharpe_aftercost;
         j=j+1;

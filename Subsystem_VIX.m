@@ -5,11 +5,20 @@ function Subsys=Subsystem_VIX()
 % Trade the second front contract
 
 %% Load data
-% clear;
-% Amyaddpath('Home');
+clear;
+loc='Home';
+if strcmp(loc,'C')
+    datadir='O:\langyu\Reading\Systematic_Trading_RobCarver\Futures Generic\';
+    load(strcat(datadir,'EquityData'));
+else
+    Amyaddpath('Home');
+    dir='C:\Spectrion\Data\AllData\Future_Generic\';
+    load(strcat(dir,'EquityData.mat'));
+    load(strcat(dir,'Bond10YData.mat'));
+    load(strcat(dir,'ComdtyData.mat'));
+    load('Setting.mat');
 
-load('O:\langyu\Reading\Systematic_Trading_RobCarver\Futures Generic\EquityData_RollT-1.mat')
-% fstgeneric=EquityData.VIX.Generic123Price.UX1_Index;
+end
 sndgeneric=EquityData.VIX.Generic123Price.UX2_Index;
 sndgeneric_ret=EquityData.VIX.Generic12Return.G2ret;
 FutRollFreq=1/12;
@@ -18,7 +27,7 @@ FutRollFreq=1/12;
 %% set up
 stdev=smartstd(sndgeneric_ret)*sqrt(250);%annualised stdev
 
-bidask_spread=0.003; %bid-ask spread (% term)
+bidask_spread=0.005; %bid-ask spread (% term)
 
 load Setting.mat
 forstscalar=setting.FcstScalar_T;
@@ -74,7 +83,17 @@ end
  Blend.DiversifedMultiplier=dm;
      
 %% Trade simulation
+Signal=CarryTrade.signal;
 Subsys=TradeSimT3(sndgeneric,sndgeneric_ret,vol_target,'',Signal,bidask_spread);
+
+% AUM=100000; vol_target=0.2;contract_size=100;fx=ones(size(Signal));weight=ones(size(Signal)); diversifer=1;bidask_spread=0.005;volmat=Subsys.vol;
+% volmat(volmat<0.001)=NaN;
+% sndgeneric(isnan(sndgeneric))=0;
+% sndgeneric_ret(isnan(sndgeneric_ret))=0;
+% Signal(isnan(Signal))=0;
+% matt= TradeSimT2(AUM,vol_target,contract_size,sndgeneric,sndgeneric_ret,Signal,...
+%     volmat,fx,weight,diversifer,bidask_spread);
+
 Subsys.Signal=Signal;
 Subsys.timestamp=EquityData.VIX.timestamp;
 Subsys.stratsblending=Blend;

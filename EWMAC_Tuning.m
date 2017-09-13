@@ -1,8 +1,8 @@
 %% This script is to select best EWMAC model fast and slow parameters.
 
-function [Optimal_Parameter,AvgCorrel,meansharpe]=EWMAC_Tuning(fstgenericret)
+function [Optimal_Parameter,AvgCorrel,meansharpe]=EWMAC_Tuning(fstgenericret,bid_ask_spread)
 %Input: ts: return time series
-%
+%       bid_ask_spread: of instrument
 %Output: Optimal_Parameter: suggested optimal parameter
 %        AvgCorrel: average correlation between parameter sets
 %        AvgSharpe: sharpe of parameter sets
@@ -24,7 +24,7 @@ for i=1:size(listname,1)
     j=1;
     for fast=[2 4:4:64 72:8:128]
         slow=fast*4;
-        mat=EWMAC(ts,[0;retts],fast,slow,0.0003,0.2,'','');
+        mat=EWMAC(ts,[0;retts],fast,slow,bid_ask_spread,0.2,'','');
         tsmtx=horzcat(tsmtx,mat.performance.dailyreturn);
         sharpemtx(i,j)=mat.performance.sharpe_aftercost;
         j=j+1;
