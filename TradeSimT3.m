@@ -33,8 +33,11 @@ Perf.dailyreturn=ret;%
 Perf.cumpnl=cumprod(1+ret)-1; %Accumulative PNL
 Perf.apr=prod(1+ret).^(252/length(ret))-1; %annualised returns since inception
 Perf.sharpe_aftercost=mean(ret)*sqrt(252)/std(ret); %sharpe ratio since inception
-Perf.maxdd=maxdrawdown(100*cumprod(1+ret)); %maxdrawdown since inception
-
+try
+    Perf.maxdd=maxdrawdown(100*cumprod(1+ret)); %maxdrawdown since inception
+catch
+    Perf.maxdd=NaN;
+end
 matt.performance=Perf; %performance matrix
 
 %% rolling daily volatility (25days simple moving average)
