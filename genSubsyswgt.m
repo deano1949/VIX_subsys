@@ -32,8 +32,8 @@ for i=52*10:52:sz
 end
 wgtts=backshift(52,wgtts); wgtts(1:520,:)=NaN;
 dmts=backshift(52,wgtts); dmts(1:520,:)=NaN;
-sys.name=MultiSubsysMat.name;
+sys.instrument=MultiSubsysMat.name;
 sys.corr=correl;
 sys.wgts=wgtts;
 sys.dmts=dmts;% diversified multipiler
-
+sys.weektimestamp=MultiSubsysMat.weektimestamp;

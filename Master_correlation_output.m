@@ -1,18 +1,21 @@
 %% Load data
 clear;
-loc='Home';
-if strcmp(loc,'C')
-    datadir='O:\langyu\Reading\Systematic_Trading_RobCarver\Futures Generic\';
-    load(strcat(datadir,'EquityData'));
-else
-    Amyaddpath('Home');
-    dir='C:\Spectrion\Data\AllData\Future_Generic\';
-    load(strcat(dir,'EquityData.mat'));
-    load(strcat(dir,'Bond10YData.mat'));
-    load(strcat(dir,'ComdtyData.mat'));
-    load('Setting.mat');
-
-end
+loc='C';
+    if strcmp(loc,'C')
+        dir='O:\langyu\Reading\Systematic_Trading_RobCarver\Futures Generic\';
+        load(strcat(dir,'EquityData_RollT-1.mat'));
+        load(strcat(dir,'Bond10YData_RollT-1.mat'));
+        load(strcat(dir,'ComdtyData_RollT-1.mat'));
+        load(strcat(dir,'CurrencyData_RollT-1.mat'));
+        load('Setting.mat');
+    else
+        dir='C:\Spectrion\Data\AllData\Future_Generic\';
+        load(strcat(dir,'EquityData_RollT-1.mat'));
+        load(strcat(dir,'Bond10YData_RollT-1.mat'));
+        load(strcat(dir,'ComdtyData_RollT-1.mat'));
+        load(strcat(dir,'CurrencyData_RollT-1.mat'));
+        load('Setting.mat');
+    end
 
 listF={'VIX','SPX','TSX','UKX','CAC','DAX','IBEX','FTSEMIB','AEX','OMX','SMI','NKY','HIA','AS51',...
     'Brent','Gasoil','WTI','UnlGasoline','HeatingOil','NatGas','Cotton','Coffee','Coca','Sugar',...

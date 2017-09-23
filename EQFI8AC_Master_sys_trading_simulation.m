@@ -2,7 +2,7 @@
 %% Description: Trade simulation for THE SYSTEM
 
 %% load data
-load SYS_beta.mat
+load SYS_beta_EQFI8AC.mat
 load FamilySubsys.mat
 loc='C';
     if strcmp(loc,'C')
@@ -24,14 +24,18 @@ loc='C';
 %% Setup
 AUM=1000000;
 vol_target=0.2;
-listF={'SPX','VIX','WTI','USZC'};
+listF={'SPX','DAX','NKY','UKX','USZC','GERZC','JPZC','UKZC'};
 listSubsysdat=struct;
 listSubsysdat.(listF{1})=EquityData.SPX;
-listSubsysdat.(listF{2})=EquityData.VIX;
-listSubsysdat.(listF{3})=ComdtyData.WTI;
-listSubsysdat.(listF{4})=Bond10YData.USZC;
+listSubsysdat.(listF{2})=EquityData.DAX;
+listSubsysdat.(listF{3})=EquityData.NKY;
+listSubsysdat.(listF{4})=EquityData.UKX;
+listSubsysdat.(listF{5})=Bond10YData.USZC;
+listSubsysdat.(listF{6})=Bond10YData.GERZC;
+listSubsysdat.(listF{7})=Bond10YData.JPZC;
+listSubsysdat.(listF{8})=Bond10YData.UKZC;
 
-contract_size=[50 1000 1000 50]; %dummy to be automate
+contract_size=[50 5 100 10 1000 1000 1000 1000]; %dummy to be automate
 
 timestamp=setting.timestamp;
 timenum=datenum(timestamp,'dd/mm/yyyy');
@@ -54,13 +58,14 @@ for i=1:length(listF)
     volts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),smartMovingStd(subsysdat.Generic12Return.(2),25));
     volmat(:,i)=volts(:,2);
 end
-sys.wgts=[0.25 0.3 0.2 0.25];
-fx=repmat([1 1 1 1],size(timenum,1),1);
-weight=repmat(transpose(sys.wgts),size(timenum,1),1); %instrument weights
+% sys.wgts=[0.25 0.3 0.2 0.25];
+fx=repmat([1 1 1 1 1 1 1 1],size(timenum,1),1);
+weight=sys.dailywgts; %instrument weights
 % weight=sys.wgts;
 diversifer=1;
-bidask_spread=[0.0001 0.0003 0.0003 0.0003];%dummy to be automate
-% bidask_spread=[0.000 0.000 0.000 0.000];%dummy to be automate
+bidask_spread=[setting.BidAskSpread.SPX setting.BidAskSpread.DAX setting.BidAskSpread.NKY setting.BidAskSpread.UKX ...
+    setting.BidAskSpread.USZC setting.BidAskSpread.GERZC setting.BidAskSpread.JPZC setting.BidAskSpread.UKZC];
+
 
 matt= TradeSimT2(AUM,vol_target,contract_size,xmat,xretmat,signalmat,...
     volmat,fx,weight,diversifer,bidask_spread);

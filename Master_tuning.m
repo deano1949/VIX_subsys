@@ -1,26 +1,27 @@
 %% Load data
 clear;
 loc='C';
-if strcmp(loc,'C')
-    dir='O:\langyu\Reading\Systematic_Trading_RobCarver\Futures Generic\';
-    load(strcat(dir,'EquityData'));
-    load(strcat(dir,'Bond10YData.mat'));
-    load(strcat(dir,'ComdtyData.mat'));
-else    
-    Amyaddpath('Home');
-    dir='C:\Spectrion\Data\AllData\Future_Generic\';
-    load(strcat(dir,'EquityData.mat'));
-    load(strcat(dir,'Bond10YData.mat'));
-    load(strcat(dir,'ComdtyData.mat'));
-    load('Setting.mat');
-
-end
+    if strcmp(loc,'C')
+        dir='O:\langyu\Reading\Systematic_Trading_RobCarver\Futures Generic\';
+        load(strcat(dir,'EquityData_RollT-1.mat'));
+        load(strcat(dir,'Bond10YData_RollT-1.mat'));
+        load(strcat(dir,'ComdtyData_RollT-1.mat'));
+        load(strcat(dir,'CurrencyData_RollT-1.mat'));
+        load('Setting.mat');
+    else
+        dir='C:\Spectrion\Data\AllData\Future_Generic\';
+        load(strcat(dir,'EquityData_RollT-1.mat'));
+        load(strcat(dir,'Bond10YData_RollT-1.mat'));
+        load(strcat(dir,'ComdtyData_RollT-1.mat'));
+        load(strcat(dir,'CurrencyData_RollT-1.mat'));
+        load('Setting.mat');
+    end
 load Setting.mat
 
 load TuningOutput.mat
 %% Equity %%%%%%%%%%%%%%%%%%%%%%%%%
 %% VIX
-
+% 
 % vixpricedat=EquityData.VIX.Generic123Price.UX1_Index; %price
 % vixretdat=EquityData.VIX.Generic12Return.G1ret; %return
 % bid_ask_spread=setting.BidAskSpread.VIX/10;
@@ -28,9 +29,9 @@ load TuningOutput.mat
 % [TuneVIX.EWMAC.Optimal_Parameter,TuneVIX.EWMAC.AvgCorrel,TuneVIX.EWMAC.meansharpe]=EWMAC_Tuning(vixretdat,bid_ask_spread);
 % TuningOutput.TuneVIX=TuneVIX;
 % save('TuningOutput.mat','TuningOutput');
-
-%% SPX
-
+% 1
+% % SPX
+% 
 % spxpricedat=EquityData.SPX.Generic123Price.SP1_Index; %price
 % spxretdat=EquityData.SPX.Generic12Return.G1ret; %return
 % bidaskspread=setting.BidAskSpread.SPX;
@@ -128,7 +129,6 @@ bidaskspread=setting.BidAskSpread.GERZC;
 TuningOutput.TuneGERZC=TuneGERZC;
 save('TuningOutput.mat','TuningOutput');
 %% Japan 10Y bond
-
 JPZCpricedat=Bond10YData.JPZC.Generic123Price.JB1_Comdty; %price
 JPZCretdat=Bond10YData.JPZC.Generic12Return.G1ret; %return
 bidaskspread=setting.BidAskSpread.JPZC;
@@ -138,3 +138,36 @@ bidaskspread=setting.BidAskSpread.JPZC;
 TuningOutput.TuneJPZC=TuneJPZC;
 save('TuningOutput.mat','TuningOutput');
 
+%% FX %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% GBPUSD
+
+GBPUSDpricedat=CurrencyData.GBPUSD.Generic123Price.GBPUSD_Curncy; %price
+GBPUSDretdat=CurrencyData.GBPUSD.Generic12Return.G1ret; %return
+bidaskspread=0.000001;
+[TuneGBPUSD.SharpeRatio.Optimal_Parameter,TuneGBPUSD.SharpeRatio.AvgCorrel,TuneGBPUSD.SharpeRatio.meansharpe]=SharpeRatio_Tuning(GBPUSDretdat,bidaskspread);
+[TuneGBPUSD.EWMAC.Optimal_Parameter,TuneGBPUSD.EWMAC.AvgCorrel,TuneGBPUSD.EWMAC.meansharpe]=EWMAC_Tuning(GBPUSDretdat,bidaskspread);
+
+TuningOutput.TuneGBPUSD=TuneGBPUSD;
+save('TuningOutput.mat','TuningOutput');
+
+%% EURUSD
+
+EURUSDpricedat=CurrencyData.EURUSD.Generic123Price.EURUSD_Curncy; %price
+EURUSDretdat=CurrencyData.EURUSD.Generic12Return.G1ret; %return
+bidaskspread=0.000001;
+[TuneEURUSD.SharpeRatio.Optimal_Parameter,TuneEURUSD.SharpeRatio.AvgCorrel,TuneEURUSD.SharpeRatio.meansharpe]=SharpeRatio_Tuning(EURUSDretdat,bidaskspread);
+[TuneEURUSD.EWMAC.Optimal_Parameter,TuneEURUSD.EWMAC.AvgCorrel,TuneEURUSD.EWMAC.meansharpe]=EWMAC_Tuning(EURUSDretdat,bidaskspread);
+
+TuningOutput.TuneEURUSD=TuneEURUSD;
+save('TuningOutput.mat','TuningOutput');
+
+%% JPYUSD
+
+JPYUSDpricedat=CurrencyData.JPYUSD.Generic123Price.JPYUSD_Curncy; %price
+JPYUSDretdat=CurrencyData.JPYUSD.Generic12Return.G1ret; %return
+bidaskspread=0.000001;
+[TuneJPYUSD.SharpeRatio.Optimal_Parameter,TuneJPYUSD.SharpeRatio.AvgCorrel,TuneJPYUSD.SharpeRatio.meansharpe]=SharpeRatio_Tuning(JPYUSDretdat,bidaskspread);
+[TuneJPYUSD.EWMAC.Optimal_Parameter,TuneJPYUSD.EWMAC.AvgCorrel,TuneJPYUSD.EWMAC.meansharpe]=EWMAC_Tuning(JPYUSDretdat,bidaskspread);
+
+TuningOutput.TuneJPYUSD=TuneJPYUSD;
+save('TuningOutput.mat','TuningOutput');

@@ -50,47 +50,56 @@ if ~isempty(id)
     pair1=id(1);
 
     %2nd pair
-    l=2;
-    while l<=length(id)
-        crosscorrel=AvgCorrel(pair1,id(l));
-        if crosscorrel<correllimit
-            pair2=id(l);
-            l=l+1;
-            break
-        end
-
-        if l== length(id)
+    if length(id)==1
         pair2=pair1;
-        end
-        l=l+1;
-    end
-
-    %3rd pair
-    if pair2==pair1
-        pair3=pair2;
+        pair3=pair1;
     else
+        l=2;
         while l<=length(id)
-            crosscorrel=AvgCorrel(pair2,id(l));
+            crosscorrel=AvgCorrel(pair1,id(l));
             if crosscorrel<correllimit
-                pair3=id(l);
+                pair2=id(l);
+                l=l+1;
                 break
             end
+
             if l== length(id)
-            pair3=pair1;
+            pair2=pair1;
             end
             l=l+1;
         end
-    end
 
+        %3rd pair
+        if length(id)==3
+            pair3=pair2;
+        else
+            if pair2==pair1
+                pair3=pair2;
+            else
+                while l<=length(id)
+                    crosscorrel=AvgCorrel(pair2,id(l));
+                    if crosscorrel<correllimit
+                        pair3=id(l);
+                        break
+                    end
+                    if l== length(id)
+                    pair3=pair1;
+                    end
+                    l=l+1;
+                end
+                pair3=pair2;
+            end
+        end
+    end
     %Optimal
     Optimal_Parameter=[periodlist(pair1) periodlist(pair2) periodlist(pair3)];
 
     AvgCorrel=array2table(AvgCorrel,'VariableNames',para_name);
     meansharpe=array2table(meansharpe,'VariableNames',para_name);
-    try
-        Optimal_Parameter_name=[para_name(pair1) para_name(pair2) para_name(pair3)];
-    catch
+    if pair1==pair2 || pair2==pair3 || pair1==pair3
         Optimal_Parameter_name=[para_name(pair1) strcat(para_name(pair2),'_') strcat(para_name(pair3),'__')];
+    else
+        Optimal_Parameter_name=[para_name(pair1) para_name(pair2) para_name(pair3)];
     end
     Optimal_Parameter=array2table(Optimal_Parameter,'VariableNames',Optimal_Parameter_name,'RowNames',{'period'});
 else
