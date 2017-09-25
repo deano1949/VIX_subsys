@@ -43,7 +43,7 @@ catch
     dir='O:\langyu\Reading\Systematic_Trading_RobCarver\VIX subsystem\';
     load(strcat(dir,'TuningOutput.mat'));
 end
-eval(['tunepara=' name]);
+eval(['tunepara=TuningOutput.' name]);
 
 %% Carry Trade
 carrysignal=dat.Carry; %annualised carry

@@ -10,7 +10,7 @@ listF={'VIX','SPX','TSX','UKX','CAC','DAX','IBEX','MIB','AEX','OMX','SMI','NKY',
     'USZC','AUSZC','CAZC','GERZC','UKZC','JPZC'};
 [selection,ok]=listdlg('ListString',listF);
 
-loc='C';
+loc='';
 if ok==1
 %% Load data
 load FamilySubsys.mat

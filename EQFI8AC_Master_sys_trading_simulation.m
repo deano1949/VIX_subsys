@@ -4,7 +4,7 @@
 %% load data
 load SYS_beta_EQFI8AC.mat
 load FamilySubsys.mat
-loc='C';
+loc='';
     if strcmp(loc,'C')
         dir='O:\langyu\Reading\Systematic_Trading_RobCarver\Futures Generic\';
         load(strcat(dir,'EquityData_RollT-1.mat'));
@@ -44,11 +44,14 @@ xmat=NaN(size(timenum,1),size(listF,2));
 xretmat=NaN(size(timenum,1),size(listF,2));
 signalmat=NaN(size(timenum,1),size(listF,2));
 volmat=NaN(size(timenum,1),size(listF,2));
+perfmat=NaN(size(timenum,1),size(listF,2));
+
 %subsystem
 namefld=fieldnames(FamilySubsys);
 for i=1:length(listF)
     subsysdat=listSubsysdat.(listF{i});
-    subsys=FamilySubsys.(namefld{i});
+    subsysname=strcat('Subsystem_',listF{i});
+    subsys=FamilySubsys.(subsysname);
     xts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),subsysdat.Generic123Price.(2)); %vlookup on timenum
     xmat(:,i)=xts(:,2);
     xretts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),subsysdat.Generic12Return.(2)); %vlookup on timenum
@@ -57,6 +60,8 @@ for i=1:length(listF)
     signalmat(:,i)=signalts(:,2);
     volts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),smartMovingStd(subsysdat.Generic12Return.(2),25));
     volmat(:,i)=volts(:,2);
+    perfts=tsvlookup(timenum,datenum(subsys.timestamp,'dd/mm/yyyy'),subsys.performance.dailyreturn);
+    perfmat(:,i)=perfts(:,2);
 end
 % sys.wgts=[0.25 0.3 0.2 0.25];
 fx=repmat([1 1 1 1 1 1 1 1],size(timenum,1),1);
@@ -72,3 +77,22 @@ matt= TradeSimT2(AUM,vol_target,contract_size,xmat,xretmat,signalmat,...
 
 matt.timestamp=timestamp;
 timeseriesplot(matt.vol,timestamp)
+
+%% Quick PNL
+for l=1:size(sys.dailywgts,2)
+    wgts=tsvlookup(timenum,sys.dailytimestamp,sys.dailywgts(:,l));
+    WGT(:,l)=wgts(:,2);
+end
+daily_Total_PNL=sum(perfmat.*WGT,2);
+daily_Total_PNL(isnan(daily_Total_PNL))=0;
+
+FinalSySPerf.timestamp=datestr(wgts(:,1));
+FinalSySPerf.dailyreturn=daily_Total_PNL;%
+FinalSySPerf.cumpnl=cumprod(1+daily_Total_PNL)-1; %Accumulative PNL
+FinalSySPerf.apr=prod(1+daily_Total_PNL).^(252/length(daily_Total_PNL))-1; %annualised returns since inception
+FinalSySPerf.sharpe_aftercost=mean(daily_Total_PNL)*sqrt(252)/std(daily_Total_PNL); %sharpe ratio since inception
+try
+    FinalSySPerf.maxdd=maxdrawdown(100*cumprod(1+daily_Total_PNL)); %maxdrawdown since inception
+catch
+    FinalSySPerf.maxdd=NaN;
+end
