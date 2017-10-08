@@ -12,7 +12,7 @@ function matt = SharpeRatio(x,xret,t,bidask_spread,vol_target,vol,forecastscalar
 %        Perf: performance matrix (APR,SR,CumPNL,MaxDD)
 
 % nants=x(isnan(x));
-% x_exnan=x(~isnan(x)); 
+% x_exnan=x(~isnan(x));
 rollSR=smartMovingAvg(xret,t)./smartMovingStd(xret,t)*sqrt(250);
 
 %raw_ewma_crossover=ewma_fast-ewma_slow; %macd crossing

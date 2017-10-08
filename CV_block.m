@@ -1,4 +1,4 @@
-function mat=CV_block(ts,xunits,no_partition,no_combined)
+function mat=CV_block(ts,xunits,no_partition,no_combined,chunckno)
 %Description: simulate xunits numbers of simulations from a full time
 %series matrix
 %
@@ -13,16 +13,16 @@ function mat=CV_block(ts,xunits,no_partition,no_combined)
 ts=ts(~isnan(sum(ts,2)),:);
 
 %% Create partition
-if xunits>250
-    warning('maximum number of monte carlo simulaitons is capped at 400');
-    xunits=250;
+if xunits>1000
+    warning('maximum number of monte carlo simulaitons is capped at 1000');
+    xunits=1000;
 end
 
 if nargin==2
     no_partition=20; %number of paritions
     no_combined=2;
-elseif no_partition<20
-    error('no_partition must be > 20');
+elseif no_partition<2
+    error('no_partition must be > 2');
 elseif no_combined>no_partition
     error('no_combined must be < no_partition');
 end
@@ -69,7 +69,7 @@ for i=1:xunits
             partname=['n',num2str(block(i,j))];
             gents=vertcat(gents,parts.(partname));
         end
-        name=['n',num2str(i)];
+        name=['n',num2str(chunckno),'0',num2str(i)];
         mat.(name)=gents;
 
      end

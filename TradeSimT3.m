@@ -20,7 +20,7 @@ ret(isnan(ret))=0;
 
 %% estimate turnover
 turnover=abs(pos-backshift(1,pos));turnover(isnan(turnover))=0; %turnover = signal differenial
-annualised_turnover=ceil(sum(turnover)/size(pos,1)*252);%estimated turnover per year
+annualised_turnover=ceil(sum(turnover)/size(pos,1)/252);%estimated turnover per year
 tc=turnover.*bidask_spread; %transaction costs
 ret=ret-tc;
 

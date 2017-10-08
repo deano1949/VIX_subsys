@@ -13,5 +13,5 @@ tsmat(:,1)=lookuptime;
 [~,id]=ismember(tstime,lookuptime); id=id(id~=0);
 [~,ik]=ismember(lookuptime,tstime); ik=ik(ik~=0);
 
-tsmat(id,2)=tsdata(ik);
-
+ts=tsdata(ik); ts(isnan(ts))=0;
+tsmat(id,2)=ts;

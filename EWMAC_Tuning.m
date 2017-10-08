@@ -1,6 +1,6 @@
 %% This script is to select best EWMAC model fast and slow parameters.
 
-function [Optimal_Parameter,AvgCorrel,meansharpe]=EWMAC_Tuning(fstgenericret,bid_ask_spread)
+function [Optimal_Parameter,AvgCorrel,midsharpe]=EWMAC_Tuning(fstgenericret,bid_ask_spread)
 %Input: ts: return time series
 %       bid_ask_spread: of instrument
 %Output: Optimal_Parameter: suggested optimal parameter
@@ -10,7 +10,7 @@ function [Optimal_Parameter,AvgCorrel,meansharpe]=EWMAC_Tuning(fstgenericret,bid
 fstgenericret=fstgenericret(~isnan(fstgenericret));
 
 %% Boostrap
-blocks=CV_block(fstgenericret,10,30,20);
+blocks=CV_block_MC(fstgenericret,100,750);
 listname=fieldnames(blocks);
 sharpemtx=[];
 slowlist=[];
@@ -44,8 +44,9 @@ correllimit=0.8;
 
 %1st pair
 AvgCorrel=mean(avgcorr,3);
-meansharpe=mean(sharpemtx);
-[ix,id]=sort(meansharpe(meansharpe>0),'descend');
+midsharpe=nanmedian(sharpemtx);
+% [ix,id]=sort(midsharpe(midsharpe>0),'descend');
+[ix,id]=sort(midsharpe,'descend');
 
 if ~isempty(id)
     %1st pair
@@ -97,7 +98,7 @@ if ~isempty(id)
         slowlist(pair1) slowlist(pair2) slowlist(pair3)];
 
     AvgCorrel=array2table(AvgCorrel,'VariableNames',para_name);
-    meansharpe=array2table(meansharpe,'VariableNames',para_name);
+    midsharpe=array2table(midsharpe,'VariableNames',para_name);
     if pair1==pair2 || pair2==pair3 || pair1==pair3
         Optimal_Parameter_name=[para_name(pair1) strcat(para_name(pair2),'_') strcat(para_name(pair3),'__')];
     else
@@ -107,6 +108,6 @@ if ~isempty(id)
 else
     Optimal_Parameter={};
     AvgCorrel={};
-    meansharpe={};
+    midsharpe={};
 end
 
