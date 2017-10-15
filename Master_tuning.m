@@ -24,22 +24,22 @@ eqbmkdat=EquityData.EWIndex.Generic12Return.G1ret; %bmk return
 
 %% VIX
 
-vixpricedat=EquityData.VIX.Generic123Price.UX1_Index; %price
-vixretdat=EquityData.VIX.Generic12Return.G1ret; %return
-bid_ask_spread=setting.BidAskSpread.VIX/10;
-[TuneVIX.SharpeRatio.Optimal_Parameter,TuneVIX.SharpeRatio.AvgCorrel,TuneVIX.SharpeRatio.meansharpe]=SharpeRatio_Tuning(vixretdat,bid_ask_spread);
-[TuneVIX.EWMAC.Optimal_Parameter,TuneVIX.EWMAC.AvgCorrel,TuneVIX.EWMAC.meansharpe]=EWMAC_Tuning(vixretdat,bid_ask_spread);
-TuningOutput.TuneVIX=TuneVIX;
-save('TuningOutput.mat','TuningOutput');
-
+% vixpricedat=EquityData.VIX.Generic123Price.UX1_Index; %price
+% vixretdat=EquityData.VIX.Generic12Return.G1ret; %return
+% bid_ask_spread=setting.BidAskSpread.VIX/10;
+% [TuneVIX.SharpeRatio.Optimal_Parameter,TuneVIX.SharpeRatio.AvgCorrel,TuneVIX.SharpeRatio.meansharpe]=SharpeRatio_Tuning(vixretdat,bid_ask_spread);
+% [TuneVIX.EWMAC.Optimal_Parameter,TuneVIX.EWMAC.AvgCorrel,TuneVIX.EWMAC.meansharpe]=EWMAC_Tuning(vixretdat,bid_ask_spread);
+% TuningOutput.TuneVIX=TuneVIX;
+% save('TuningOutput.mat','TuningOutput');
 
 %% SPX
 spxpricedat=EquityData.SPX.Generic123Price.SP1_Index; %price
 spxretdat=EquityData.SPX.Generic12Return.G1ret; %return
 spxactiveretdat=spxretdat-eqbmkdat; %active return
 bidaskspread=setting.BidAskSpread.SPX;
-[TuneSPX.SharpeRatio.Optimal_Parameter,TuneSPX.SharpeRatio.AvgCorrel,TuneSPX.SharpeRatio.meansharpe]=SharpeRatio_Tuning(spxretdat,bidaskspread);
+% [TuneSPX.SharpeRatio.Optimal_Parameter,TuneSPX.SharpeRatio.AvgCorrel,TuneSPX.SharpeRatio.meansharpe]=SharpeRatio_Tuning(spxretdat,bidaskspread);
 [TuneSPX.EWMAC.Optimal_Parameter,TuneSPX.EWMAC.AvgCorrel,TuneSPX.EWMAC.meansharpe]=EWMAC_Tuning(spxretdat,bidaskspread);
+% [TuneSPX.EMAS.Optimal_Parameter,TuneSPX.EMAS.AvgCorrel,TuneSPX.EMAS.meansharpe]=EMAS_Tuning(spxretdat,bidaskspread);
 [TuneSPX.InfoRatio.Optimal_Parameter,TuneSPX.InfoRatio.AvgCorrel,TuneSPX.InfoRatio.meansharpe]=InfoRatio_Tuning(spxretdat(300:end,1),spxactiveretdat(300:end,1),bidaskspread); %the first 300 days(back to 1989)SPX is average as it was only futures available
 TuningOutput.TuneSPX=TuneSPX;
 save('TuningOutput.mat','TuningOutput');

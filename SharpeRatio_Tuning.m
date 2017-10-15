@@ -10,7 +10,7 @@ function [Optimal_Parameter,AvgCorrel,midsharpe]=SharpeRatio_Tuning(fstgenericre
 fstgenericret=fstgenericret(~isnan(fstgenericret));
 
 %% Boostrap
-blocks=CV_block_MC(fstgenericret,100,750);
+blocks=CV_block_MC(fstgenericret,1000,750);
 listname=fieldnames(blocks);
 sharpemtx=[];
 periodlist=[];

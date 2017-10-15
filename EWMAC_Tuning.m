@@ -10,7 +10,7 @@ function [Optimal_Parameter,AvgCorrel,midsharpe]=EWMAC_Tuning(fstgenericret,bid_
 fstgenericret=fstgenericret(~isnan(fstgenericret));
 
 %% Boostrap
-blocks=CV_block_MC(fstgenericret,100,750);
+blocks=CV_block_MC(fstgenericret,500,750);
 listname=fieldnames(blocks);
 sharpemtx=[];
 slowlist=[];
@@ -23,17 +23,18 @@ for i=1:size(listname,1)
     tsmtx=[];
     j=1;
     for fast=[2 4:4:64 72:8:128]
-        slow=fast*4;
-        mat=EWMAC(ts,[0;retts],fast,slow,bid_ask_spread,0.2,'','');
-        tsmtx=horzcat(tsmtx,mat.performance.dailyreturn);
-        sharpemtx(i,j)=mat.performance.sharpe_aftercost;
-        j=j+1;
-        
-        %Get parameter names
-        if i==1
-           para_name=[para_name,strcat('X_',num2str(fast),'_',num2str(slow))];
-           slowlist=horzcat(slowlist,slow);
-           fastlist=horzcat(fastlist,fast);
+        for multiple=[4]
+            slow=fast*multiple;
+            mat=EWMAC(ts,[0;retts],fast,slow,bid_ask_spread,0.2,'','');
+            tsmtx=horzcat(tsmtx,mat.performance.dailyreturn);
+            sharpemtx(i,j)=mat.performance.sharpe_aftercost;
+            j=j+1;       
+            %Get parameter names
+            if i==1
+               para_name=[para_name,strcat('X_',num2str(fast),'_',num2str(slow))];
+               slowlist=horzcat(slowlist,slow);
+               fastlist=horzcat(fastlist,fast);
+            end
         end
     end
     avgcorr(:,:,i)=corr(tsmtx);
