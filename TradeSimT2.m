@@ -15,7 +15,8 @@ desired_pos(1,:)=zeros(1,size(x,2));
 PI=NaN(size(x,1),1); PI(1)=AUM; %Price index
 pos_val=zeros(size(x,1),size(x,2)+1); %1st col is cash position value
 pos_val(1,:)=[AUM zeros(1,size(x,2))]; %@ start of a day
-
+to=zeros(size(x,1),1); %turnover
+EcoExpo=zeros(size(x,1),size(x,2)); %economics exposure
 for i=2:size(x,1)
     cash_vol_target=PI(i-1)*vol_target/sqrt(252);
     stdev=vol(i-1,:);
@@ -25,14 +26,16 @@ for i=2:size(x,1)
     w=weight(i-1,:);
     desired_pos(i,:) = propose_trade(stdev,contract_size,price,forecast,fxrate,cash_vol_target,w,diversifer);
     tc=sum(abs((desired_pos(i,:)-desired_pos(i-1,:))).*contract_size.*price.*bidask_spread); %transaction cost
+    to(i)=sum(abs((desired_pos(i,:)-desired_pos(i-1,:))).*contract_size.*price); %turnover
+    EcoExpo(i,:)=abs(desired_pos(i,:).*contract_size.*price);
     pos_val(i,2:end)=desired_pos(i,:).*price.*contract_size.*xret(i,:); %active positions value (pnl for futures)
     pos_val(isnan(pos_val))=0; %remove nan
     if tc~=0
-        pos_val(i,1)=pos_val(i-1,1)-tc; %cash value
+        pos_val(i,1)=PI(i-1,1)-tc; %cash value
     else
-        pos_val(i,1)=pos_val(i-1,1);
+        pos_val(i,1)=PI(i-1,1);
     end
-    PI(i)=sum(pos_val(i,:),2);%-----------------------------------------
+    PI(i)=sum(pos_val(i,:),2);
 end    
 
 
@@ -40,10 +43,13 @@ end
 
 
 
+%% system index & position
+matt.PI=PI;
+matt.AUM=AUM;
+matt.desireposition=desired_pos;
 %% estimate turnover
-% tradeswitch=numUnits~=backshift(1,numUnits);tradeswitch(1)=0; %trade takes place
-% matt.annualised_turnover=ceil(sum(tradeswitch)/size(numUnits,1)*252);%estimated number of trades per year
-
+matt.annualised_turnover=mean(to./PI)*252;%estimated number of trades per year
+matt.economicsexposure=EcoExpo;
 %% PNL and Sharpe ratio
 ret=[0; tick2ret(PI)];
 ret(isnan(ret))=0;
@@ -57,5 +63,6 @@ matt.performance=Perf; %performance matrix
 
 %% rolling daily volatility (25days simple moving average)
 matt.vol=smartMovingStd(ret,25);
+
 end
 

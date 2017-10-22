@@ -4,7 +4,7 @@
 %% load data
 load SYS_beta.mat
 load FamilySubsys.mat
-loc='C';
+loc='';
     if strcmp(loc,'C')
         dir='O:\langyu\Reading\Systematic_Trading_RobCarver\Futures Generic\';
         load(strcat(dir,'EquityData_RollT-1.mat'));
@@ -22,7 +22,7 @@ loc='C';
     end
 
 %% Setup
-AUM=1000000;
+AUM=200000;
 vol_target=0.2;
 listF={'SPX','VIX','WTI','USZC'};
 listSubsysdat=struct;
@@ -56,12 +56,12 @@ for i=1:length(listF)
 end
 sys.wgts=[0.25 0.3 0.2 0.25];
 fx=repmat([1 1 1 1],size(timenum,1),1);
-weight=repmat(transpose(sys.wgts),size(timenum,1),1); %instrument weights
+weight=repmat(sys.wgts,size(timenum,1),1); %instrument weights
 % weight=sys.wgts;
 diversifer=1;
 bidask_spread=[0.0001 0.0003 0.0003 0.0003];%dummy to be automate
 % bidask_spread=[0.000 0.000 0.000 0.000];%dummy to be automate
-
+volmat(volmat==0)=NaN;
 matt= TradeSimT2(AUM,vol_target,contract_size,xmat,xretmat,signalmat,...
     volmat,fx,weight,diversifer,bidask_spread);
 
