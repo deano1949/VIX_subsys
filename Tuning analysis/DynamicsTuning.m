@@ -1,17 +1,17 @@
 %% Description
 % This script analyse the output of dynamics tuning output
 
-load DynamicsTuningOutput.mat
+% load DynamicsTuningOutput.mat
 
-%TuneSPX
+%% TuneSPX
 
-TuneSPX=DynamicsTuningOutput.TuneSPX;
+TuneAC=DynamicsTuningOutput.TuneJPZC;
 
-nm=fieldnames(TuneSPX);
+nm=fieldnames(TuneAC);
 sz=length(nm);
 
 for i=1:sz
-    win=TuneSPX.(nm{i});
+    win=TuneAC.(nm{i});
     EWMAC(i,:)=win.EWMAC.meansharpe;
     IR(i,:)=win.InfoRatio.meansharpe;
     EBP=fieldnames(win.EWMAC.Optimal_Parameter);
@@ -19,8 +19,8 @@ for i=1:sz
     IRBstPara(i,:)=win.InfoRatio.Optimal_Parameter;
 end
 
-writetable(EWMAC,'DynamicsTuningOutputComp.xlsx','Sheet','EWMAC');
-writetable(IR,'DynamicsTuningOutputComp.xlsx','Sheet','InfoRatio');
+writetable(EWMAC,'DynamicsTuningOutputComp.xlsx','Sheet','EWMAC','Range','A480');
+writetable(IR,'DynamicsTuningOutputComp.xlsx','Sheet','InfoRatio','Range','A480');
 
-writetable(table(EWMACBstPara),'DynamicsTuningOutputComp.xlsx','Sheet','EWMAC','Range','A20');
-writetable(IRBstPara,'DynamicsTuningOutputComp.xlsx','Sheet','InfoRatio','Range','A20');
+writetable(table(EWMACBstPara),'DynamicsTuningOutputComp.xlsx','Sheet','EWMAC','Range','A500');
+writetable(IRBstPara,'DynamicsTuningOutputComp.xlsx','Sheet','InfoRatio','Range','A500');

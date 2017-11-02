@@ -22,7 +22,7 @@ loc='';
     end
 
 %% Setup
-AUM=200000;
+AUM=500000;
 vol_target=0.2;
 listF={'SPX','VIX','WTI','USZC'};
 listSubsysdat=struct;
@@ -31,7 +31,7 @@ listSubsysdat.(listF{2})=EquityData.VIX;
 listSubsysdat.(listF{3})=ComdtyData.WTI;
 listSubsysdat.(listF{4})=Bond10YData.USZC;
 
-contract_size=[50 1000 1000 50]; %dummy to be automate
+contract_size=[50 1000 1000 1000]; %dummy to be automate
 
 timestamp=setting.timestamp;
 timenum=datenum(timestamp,'dd/mm/yyyy');
