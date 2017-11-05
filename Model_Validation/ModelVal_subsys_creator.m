@@ -37,6 +37,6 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
         x=dat.Generic123Price.(1);
         xret=dat.Generic12Return.(1);
         bidask_spread=setting.BidAskSpread.UKX;
-        Subsystem=RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
+        Subsystem=ModelVal_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_UKX'))=Subsystem;
         save ModelVal_FamilySubsys.mat FamilySubsys

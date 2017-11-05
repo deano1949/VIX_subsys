@@ -19,9 +19,9 @@ ret=pos.*xret; %signal @ 10 means normal buy signal, we assume buy 1 contract; h
 ret(isnan(ret))=0;
 
 %% estimate turnover
-turnover=abs((pos-backshift(1,pos))./pos);turnover(isnan(turnover))=0; %turnover = signal differenial %
+turnover=abs(pos-backshift(1,pos));turnover(isnan(turnover))=0; %turnover = signal differenial
 annualised_turnover=ceil(sum(turnover)/size(pos,1)/252);%estimated turnover per year
-tc=turnover.*bidask_spread; %transaction costs
+tc=turnover.*bidask_spread; %transaction costs 
 ret=ret-tc;
 
 %cost in SR units

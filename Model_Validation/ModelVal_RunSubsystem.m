@@ -62,8 +62,7 @@ if strcmp(blend_type,'Boostrap')
      SignalStruct=CV_block_MC(alphas,1000,500);
      [correl,wgt,dm]=Boostrap(SignalStruct,signal_sharp,vol_target);
    
-     Signal=[CarryTrade.signal EWMA_ST.signal EWMA_MT.signal EWMA_LT.signal ...
-         SR_ST.signal SR_MT.signal SR_LT.signal];
+     Signal=[CarryTrade.signal EWMA_ST.signal EWMA_MT.signal EWMA_LT.signal];
      SignalTot=Signal*wgt*dm; %combined signal
      SignalTot(SignalTot>20)=20;SignalTot(SignalTot<-20)=-20;
 

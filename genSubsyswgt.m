@@ -15,7 +15,7 @@ for i=52*10:52:sz
     wts=Weekts(1:i,:);
     if strcmp(blend_type,'Boostrap') 
         %% Boostrap
-        rettsStruct=CV_block(wts,100,20,8,1);
+        rettsStruct=CV_block(wts,1000,20,8,1);
         [correl,wgt]=Boostrap(rettsStruct,'',vol_target);
         dm=diversify_multiplier(correl,wgt');
     else

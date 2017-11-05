@@ -51,21 +51,20 @@ curnyF={'USD','GBPUSD'};
 curnydat.(curnyF{2})=CurrencyData.GBPUSD;
 fxmat=NaN(size(timenum,1),size(curnyF,2));
 for j=1:length(curnyF)
-    ccy=curnyF{i};
+    ccy=curnyF{j};
     switch ccy
         case 'USD'
-            fx=repmat([1 1 1 1],size(timenum,1),1);
+            fx=ones(size(timenum,1),1);
         case 'GBPUSD'
-            fx=1./tsvlookup(timenum,datenum(curnydat.timestamp,'dd/mm/yyyy'),curnydat.Generic123Price.(1));
+            fxsys=curnydat.GBPUSD;
+            fx=tsvlookup(timenum,datenum(fxsys.timestamp,'dd/mm/yyyy'),fxsys.Generic123Price.(1));
+            fx=fx(:,2);
     end
     fxmat(:,j)=fx;
 end
 %................................2017/11/04 23:33s
 %% Weights of portfolios
-sys.wgts=[0.25 0.3];
-    
-weight=repmat(sys.wgts,size(timenum,1),1); %instrument weights
-% weight=sys.wgts;
+weight=sys.dailywgts;
 
 %% diversification multiplier
 diversifer=1;
