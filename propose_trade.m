@@ -4,7 +4,7 @@ function desired_pos = propose_trade(vol,contract_size,price,forecast,fx,cash_vo
 
 block_value=0.01*contract_size.*price;
 
-dollar_vol=vol.*block_value.*fx*100; %volatility in $ dollar term
+dollar_vol=vol.*block_value.*fx*100; %volatility in $ dollar term (translate into $)
 
 subsys_pos=cash_vol_target./dollar_vol.*forecast/10;
 

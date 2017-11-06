@@ -14,7 +14,13 @@ if strcmp(vol,'')
 end
 
 vol_target=vol_target/sqrt(252); %convert to daily volatility target
-pos=vol_target.*backshift(1,signal)./(backshift(1,vol)*10);%position: no of contracts/shares
+
+%% positions
+%pos=vol_target.*backshift(1,signal)./(backshift(1,vol)*10);%position: no
+%of contracts/shares ----changed at 06/11/2017
+pos=backshift(1,signal)/10; 
+% not required to scale up to target vol as blending multiple strategies within the same asset does not need risk scaling
+%%
 ret=pos.*xret; %signal @ 10 means normal buy signal, we assume buy 1 contract; hence why divded by 10
 ret(isnan(ret))=0;
 
