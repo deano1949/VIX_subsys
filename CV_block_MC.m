@@ -9,16 +9,19 @@ if size(ts,1)<LenTS
 end
 no=xunits/20;
 mat=struct;
+randgen=[];
 for i=1:no
     if size(ts,1)<LenTS
-        chuncklen=randi([7,floor(LenTS/3)]);
+        chuncklen=randi([4,floor(LenTS/10)]);
     else
-        chuncklen=randi([7,250]); %uniformly selected width of a chunck
+        chuncklen=randi([4,floor(LenTS/10)]); %uniformly selected width of a chunck
     end
 
-    submat=CV_block(ts,20,ceil(size(ts,1)/chuncklen),ceil(LenTS/chuncklen),i);
+    submat=CV_block(ts,20,floor(size(ts,1)/chuncklen),ceil(LenTS/chuncklen),i);
     submatnm=fieldnames(submat);
     for j=1:length(submatnm)
         mat.(submatnm{j})=submat.(submatnm{j});
     end
+    randgen=[randgen; ceil(LenTS/chuncklen)];
 end
+i

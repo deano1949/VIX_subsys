@@ -14,13 +14,26 @@ load Sigmaa005_FamilySubsys.mat
 %% Setup
 AUM=500000;
 vol_target=0.2;
-listF={'SPX','UKX'};
+listF={'SPX','UKX','CAC','NKY','HIA',...
+    'USZC','UKZC','GERZC','JPZC',...
+    'WTI','Gold','Coffee'};
 listSubsysdat=struct;
 listSubsysdat.(listF{1})=EquityData.SPX;
 listSubsysdat.(listF{2})=EquityData.UKX;
+listSubsysdat.(listF{3})=EquityData.CAC;
+listSubsysdat.(listF{4})=EquityData.NKY;
+listSubsysdat.(listF{5})=EquityData.HIA;
+listSubsysdat.(listF{6})=Bond10YData.USZC;
+listSubsysdat.(listF{7})=Bond10YData.UKZC;
+listSubsysdat.(listF{8})=Bond10YData.GERZC;
+listSubsysdat.(listF{9})=Bond10YData.JPZC;
+listSubsysdat.(listF{10})=ComdtyData.WTI;
+listSubsysdat.(listF{11})=ComdtyData.Gold;
+listSubsysdat.(listF{12})=ComdtyData.Coffee;
 
-
-contract_size=[50 1000]; %dummy to be automate
+contract_size=[50 1000 10 100 10 ...
+    1000 1000 1000 100000 ...
+    500 10 37500]; %dummy to be automate
 
 timestamp=setting.timestamp;
 timenum=datenum(timestamp,'dd/mm/yyyy');
@@ -47,8 +60,13 @@ end
 
 
 %% FX
-curnyF={'USD','GBPUSD'};
-curnydat.(curnyF{2})=CurrencyData.GBPUSD;
+curnyF={'USD','GBPUSD','EURUSD','JPYUSD','HKDUSD',...
+    'USD','GBPUSD','EURUSD','JPYUSD',...
+    'USD','USD','USD'};
+curnydat.GBPUSD=CurrencyData.GBPUSD;
+curnydat.EURUSD=CurrencyData.EURUSD;
+curnydat.JPYUSD=CurrencyData.JPYUSD;
+
 fxmat=NaN(size(timenum,1),size(curnyF,2));
 for j=1:length(curnyF)
     ccy=curnyF{j};
@@ -59,10 +77,21 @@ for j=1:length(curnyF)
             fxsys=curnydat.GBPUSD;
             fx=tsvlookup(timenum,datenum(fxsys.timestamp,'dd/mm/yyyy'),fxsys.Generic123Price.(1));
             fx=fx(:,2);
+        case 'EURUSD'
+            fxsys=curnydat.EURUSD;
+            fx=tsvlookup(timenum,datenum(fxsys.timestamp,'dd/mm/yyyy'),fxsys.Generic123Price.(1));
+            fx=fx(:,2);
+        case 'JPYUSD'
+            fxsys=curnydat.JPYUSD;
+            fx=tsvlookup(timenum,datenum(fxsys.timestamp,'dd/mm/yyyy'),fxsys.Generic123Price.(1));
+            fx=fx(:,2);
+        case 'HKDUSD'
+            fx=0.1282.*ones(size(timenum,1),1);
+             
     end
     fxmat(:,j)=fx;
 end
-%................................2017/11/04 23:33s
+
 %% Weights of portfolios
 weight=sys.dailywgts;
 
@@ -70,8 +99,10 @@ weight=sys.dailywgts;
 diversifer=1;
 
 %% bidask spread
-bidask_spread=[0.0001 0.0003];%dummy to be automate
-% bidask_spread=[0.000 0.000 0.000 0.000];%dummy to be automate
+BAspread=setting.BidAskSpread;
+bidask_spread=[BAspread.SPX BAspread.UKX BAspread.CAC BAspread.NKY BAspread.HIA ...
+    BAspread.USZC BAspread.UKZC BAspread.GERZC BAspread.JPZC ...
+    BAspread.WTI BAspread.Gold BAspread.Coffee];
 
 %% Volatility
 volmat(volmat==0)=NaN;

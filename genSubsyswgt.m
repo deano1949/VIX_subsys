@@ -13,9 +13,10 @@ dmts=nan(size(MultiSubsysMat.weekts,1),1);
 j=0;
 for i=52*10:52:sz
     wts=Weekts(1:i,:);
+    wts=removezeros(wts);
     if strcmp(blend_type,'Boostrap') 
         %% Boostrap
-        rettsStruct=CV_block(wts,1000,20,8,1);
+        rettsStruct=CV_block_MC(wts,1000,156);
         [correl,wgt]=Boostrap(rettsStruct,'',vol_target);
         dm=diversify_multiplier(correl,wgt');
     else
