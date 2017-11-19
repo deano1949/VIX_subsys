@@ -18,6 +18,8 @@ pos_val(1,:)=[AUM zeros(1,size(x,2))]; %@ start of a day
 to=zeros(size(x,1),1); %turnover
 EcoExpo=zeros(size(x,1),size(x,2)); %economics exposure
 GearRatio=zeros(size(x,1),1); %Gearing ratio
+TotalEcoExpo=zeros(size(x,1),1); %Total economics exposure
+TotalPctEE=zeros(size(x,1),1); %Total economics exposure percentage
 PosWgts=zeros(size(x,1),size(x,2)); % position wegihts
 
 for i=2:size(x,1)
@@ -31,17 +33,19 @@ for i=2:size(x,1)
     tc=sum(abs((desired_pos(i,:)-desired_pos(i-1,:))).*contract_size.*price.*bidask_spread.*fxrate); %transaction cost
     to(i)=sum(abs((desired_pos(i,:)-desired_pos(i-1,:))).*contract_size.*price.*fxrate); %turnover
     EcoExpo(i,:)=desired_pos(i,:).*contract_size.*price.*fxrate; % $ economic exposure
-    GearRatio(i)=sum(EcoExpo(i,:))./NAV(i-1); %Gearing ratio
-    
+    GearRatio(i)=sum(abs(EcoExpo(i,:)))./NAV(i-1); %Gearing ratio
+
     %% Constraint on Gearing ratio
     if abs(GearRatio(i))>4 % Cap gearing ratio at 4
         desired_pos(i,:)=ceil(desired_pos(i,:).*(4/abs(GearRatio(i))));
         EcoExpo(i,:)=desired_pos(i,:).*contract_size.*price.*fxrate; % $ economic exposure
-        GearRatio(i)=sum(EcoExpo(i,:))./NAV(i-1); %Gearing ratio
-        PosWgts(i,:)=EcoExpo(i,:)./NAV(i-1); % Percentage Position exposure
+        GearRatio(i)=sum(abs(EcoExpo(i,:)))./NAV(i-1); %Gearing ratio
     end
     
     %%
+    TotalEcoExpo(i)=sum(EcoExpo(i,:)); %total economics exposure
+    TotalPctEE(i)=TotalEcoExpo(i)/NAV(i-1);%total economics exposure percentage
+    PosWgts(i,:)=EcoExpo(i,:)./NAV(i-1); % Percentage Position exposure
     pos_val(i,2:end)=desired_pos(i,:).*price.*contract_size.*xret(i,:).*fxrate; %active positions value (pnl for futures)
     pos_val(isnan(pos_val))=0; %remove nan
     if tc~=0
@@ -66,6 +70,10 @@ matt.annualised_turnover=mean(to./NAV)*252;
 matt.economicsexposure=EcoExpo;
 matt.gearingratio=GearRatio;
 matt.positionwegiths=PosWgts;
+matt.totalecoexpo=TotalEcoExpo;
+matt.totalpctecoexpo=TotalPctEE;
+matt.poswgts=PosWgts;
+
 %% PNL and Sharpe ratio
 ret=[0; tick2ret(NAV)];
 ret(isnan(ret))=0;
