@@ -48,13 +48,13 @@ namefld=fieldnames(FamilySubsys);
 for i=1:length(listF)
     subsysdat=listSubsysdat.(listF{i});
     subsys=FamilySubsys.(namefld{i});
-    xts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),subsysdat.Generic123Price.(2)); %vlookup on timenum
+    xts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),subsysdat.Generic123Price.(1)); %vlookup on timenum
     xmat(:,i)=xts(:,2);
-    xretts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),subsysdat.Generic12Return.(2)); %vlookup on timenum
+    xretts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),subsysdat.Generic12Return.(1)); %vlookup on timenum
     xretmat(:,i)=xretts(:,2);
     signalts=tsvlookup(timenum,datenum(subsys.timestamp,'dd/mm/yyyy'),subsys.Signal);
     signalmat(:,i)=signalts(:,2);
-    volts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),smartMovingStd(subsysdat.Generic12Return.(2),25));
+    volts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),smartMovingStd(subsysdat.Generic12Return.(1),25));
     volmat(:,i)=volts(:,2);
 end
 
@@ -109,7 +109,7 @@ volmat(volmat==0)=NaN;
 
 %% Trading simulation
 matt= TradeSimT2(AUM,vol_target,contract_size,xmat,xretmat,signalmat,...
-    volmat,fx,weight,diversifer,bidask_spread);
+    volmat,fxmat,weight,diversifer,bidask_spread);
 
 matt.timestamp=timestamp;
 timeseriesplot(matt.vol,timestamp)

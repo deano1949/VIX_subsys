@@ -25,7 +25,7 @@ Coffeesubsys=FamilySubsys.Subsystem_Coffee;
 MultiSubsysMat=collate(SPXsubsys,UKXsubsys, CACsubsys, NKYsubsys, HIAsubsys,...
     USZCsubsys, UKZCsubsys, GERZCsubsys, JPZCsubsys,...
     WTIsubsys, Goldsubsys, Coffeesubsys); 
-
+ 
 %generate weights of subsystems
 sys=genSubsyswgt(MultiSubsysMat,vol_target);
 sys.log=datestr(now);
