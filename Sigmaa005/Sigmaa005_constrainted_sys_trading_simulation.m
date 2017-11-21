@@ -12,7 +12,7 @@ load('Sigmaa005_Setting.mat');
 load Sigmaa005_SYS.mat
 load Sigmaa005_FamilySubsys.mat
 %% Setup
-AUM=500000;
+AUM=100000000;
 vol_target=0.2;
 listF={'SPX','UKX','CAC','NKY','HIA',...
     'USZC','UKZC','GERZC','JPZC',...
@@ -108,16 +108,15 @@ bidask_spread=[BAspread.SPX BAspread.UKX BAspread.CAC BAspread.NKY BAspread.HIA 
 volmat(volmat==0)=NaN;
 
 %% Gearing ratio limit
-gearlimit=20;
+gearlimit=4;
 %% Trading simulation
 matt= TradeSimT2(AUM,vol_target,contract_size,xmat,xretmat,signalmat,...
     volmat,fxmat,weight,diversifer,bidask_spread,gearlimit);
 
 matt.timestamp=timestamp;
-timeseriesplot(matt.vol,timestamp)
 
 %% Output
-matt.description='sigma005 unconstraint version';
+matt.description='sigma005 constrainted version with gearing ratio limit capped at 2';
 matt.timelog=datestr(now);
 
-save 'sigma005_unconstrained_output.mat' 'matt'
+save 'sigma005_constrainted_output.mat' 'matt'

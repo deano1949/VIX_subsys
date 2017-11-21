@@ -20,16 +20,16 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
 %% Generate Subsystem
 %% Equity
 
-%     %SPX
-% 
-%         dat=EquityData.SPX;
-%         x=EquityData.SPX.Generic123Price.SP1_Index;
-%         xret=EquityData.SPX.Generic12Return.G1ret;
-%         x=ret2tick(xret,100);x=x(2:end);
-%         bidask_spread=setting.BidAskSpread.SPX;
-%         Subsystem_SPX=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
-%         FamilySubsys.(strcat('Subsystem_SPX'))=Subsystem_SPX;
-%         save Sigmaa005_FamilySubsys.mat FamilySubsys
+    %SPX
+
+        dat=EquityData.SPX;
+        x=EquityData.SPX.Generic123Price.SP1_Index;
+        xret=EquityData.SPX.Generic12Return.G1ret;
+        x=ret2tick(xret,100);x=x(2:end);
+        bidask_spread=setting.BidAskSpread.SPX;
+        Subsystem_SPX=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
+        FamilySubsys.(strcat('Subsystem_SPX'))=Subsystem_SPX;
+        save Sigmaa005_FamilySubsys.mat FamilySubsys
 %     
 %     %UKX
 % 
@@ -40,17 +40,17 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
 %         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
 %         FamilySubsys.(strcat('Subsystem_UKX'))=Subsystem;
 %         save Sigmaa005_FamilySubsys.mat FamilySubsys
-
-    %CAC
-
-        dat=EquityData.CAC;
-        x=dat.Generic123Price.(1);
-        xret=dat.Generic12Return.(1);
-        bidask_spread=setting.BidAskSpread.CAC;
-        Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
-        FamilySubsys.(strcat('Subsystem_CAC'))=Subsystem;
-        save Sigmaa005_FamilySubsys.mat FamilySubsys
-        
+% 
+%     %CAC
+% 
+%         dat=EquityData.CAC;
+%         x=dat.Generic123Price.(1);
+%         xret=dat.Generic12Return.(1);
+%         bidask_spread=setting.BidAskSpread.CAC;
+%         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
+%         FamilySubsys.(strcat('Subsystem_CAC'))=Subsystem;
+%         save Sigmaa005_FamilySubsys.mat FamilySubsys
+%         
     %NKY
 
         dat=EquityData.NKY;
