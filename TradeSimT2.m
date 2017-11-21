@@ -1,4 +1,4 @@
-function matt= TradeSimT2(AUM,vol_target,contract_size,x,xret,signal,vol,fx,weight,diversifer,bidask_spread)
+function matt= TradeSimT2(AUM,vol_target,contract_size,x,xret,signal,vol,fx,weight,diversifer,bidask_spread,gearlimit)
 %% TRADESIMT2 Summary :  AUM: asset under management (US$ term)
 %                        vol_target: annualised volatility target (default 20%)
 %                        contract_size: of futures/ # of shares in an unit of equity
@@ -11,6 +11,7 @@ function matt= TradeSimT2(AUM,vol_target,contract_size,x,xret,signal,vol,fx,weig
 %                        diversifer: instrument diversification multiplier
 %                        (1 for singal instrument/strategy)
 %                        bidaskSprd: bid-ask spread
+%                        gearlimit: set a gearing ratio limit
 desired_pos(1,:)=zeros(1,size(x,2));
 NAV=NaN(size(x,1),1); NAV(1)=AUM; %Price index
 pos_val=zeros(size(x,1),size(x,2)+1); %1st col is cash position value
@@ -30,14 +31,19 @@ for i=2:size(x,1)
     fxrate=fx(i-1,:);
     w=weight(i-1,:);
     desired_pos(i,:) = propose_trade(stdev,contract_size,price,forecast,fxrate,cash_vol_target,w,diversifer);
+    
+    tradeinx= abs((desired_pos(i,:)-desired_pos(i-1,:)))<=abs(desired_pos(i-1,:))*0.1; %avoid over trading, only trade when desire position is more than 10% switch 
+    
+    desired_pos(i,:)=desired_pos(i,:).*(~tradeinx)+desired_pos(i-1,:).*tradeinx;
+    
     tc=sum(abs((desired_pos(i,:)-desired_pos(i-1,:))).*contract_size.*price.*bidask_spread.*fxrate); %transaction cost
     to(i)=sum(abs((desired_pos(i,:)-desired_pos(i-1,:))).*contract_size.*price.*fxrate); %turnover
     EcoExpo(i,:)=desired_pos(i,:).*contract_size.*price.*fxrate; % $ economic exposure
     GearRatio(i)=sum(abs(EcoExpo(i,:)))./NAV(i-1); %Gearing ratio
 
     %% Constraint on Gearing ratio
-    if abs(GearRatio(i))>4 % Cap gearing ratio at 4
-        desired_pos(i,:)=ceil(desired_pos(i,:).*(4/abs(GearRatio(i))));
+    if abs(GearRatio(i))>gearlimit % Cap gearing ratio at 4
+        desired_pos(i,:)=ceil(desired_pos(i,:).*(gearlimit/abs(GearRatio(i))));
         EcoExpo(i,:)=desired_pos(i,:).*contract_size.*price.*fxrate; % $ economic exposure
         GearRatio(i)=sum(abs(EcoExpo(i,:)))./NAV(i-1); %Gearing ratio
     end
@@ -55,10 +61,6 @@ for i=2:size(x,1)
     end
     NAV(i)=sum(pos_val(i,:),2);
 end    
-
-
-
-
 
 
 %% system index & position
@@ -79,7 +81,7 @@ ret=[0; tick2ret(NAV)];
 ret(isnan(ret))=0;
 Perf.dailyreturn=ret;%
 Perf.cumpnl=cumprod(1+ret)-1; %Accumulative PNL
-
+Perf.underlyingpnl=pos_val;
 [~,id]=ismember(0,NAV==AUM); %identify trading start point
 Perf.apr=prod(1+ret(id:end)).^(252/length(ret(id:end)))-1; %annualised returns since inception
 Perf.sharpe_aftercost=mean(ret(id:end))*sqrt(252)/std(ret(id:end)); %sharpe ratio since inception
