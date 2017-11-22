@@ -2,7 +2,7 @@
 %% Description: Trade simulation for THE SYSTEM
 
 %% load data
-
+addpath('C:\Users\gly19\Dropbox\GU\1.Investment\4. Alphas (new)\17.Extract_Rollyield\0.Research\VIX\dat\Sigmaa005')
 dir='C:\Spectrion\Data\PriceData\Future_Generic\';
 load(strcat(dir,'EquityData_RollT-1.mat'));
 load(strcat(dir,'Bond10YData_RollT-1.mat'));
@@ -13,7 +13,7 @@ load Sigmaa005_SYS.mat
 load Sigmaa005_FamilySubsys.mat
 %% Setup
 AUM=100000000;
-vol_target=0.2;
+vol_target=0.1;
 listF={'SPX','UKX','CAC','NKY','HIA',...
     'USZC','UKZC','GERZC','JPZC',...
     'WTI','Gold','Coffee'};
@@ -96,7 +96,7 @@ end
 weight=sys.dailywgts;
 
 %% diversification multiplier
-diversifer=1;
+diversifer=2;
 
 %% bidask spread
 BAspread=setting.BidAskSpread;
