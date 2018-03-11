@@ -26,7 +26,8 @@ if strcmp(vol,'')
     vol=smartMovingStd(xret,25);
 end
 
-expectRet=raw_ewma_crossover./x./vol; %unscaled signal;
+% expectRet=raw_ewma_crossover./x./vol; %unscaled signal;
+expectRet=backshift(1,raw_ewma_crossover)./x./backshift(1,vol); %MovingAverage and volatility to lag 1 as current price in practice cannot be included in calculation in real time. signal;
 
 if strcmp(forecastscalar,'')
     forecastscalar=10/mean(abs(expectRet(~isnan(expectRet))));
@@ -40,6 +41,6 @@ matt= TradeSimT3(x,xret,vol_target,vol,signal,bidask_spread);
 
 %% Output
 matt.signal=signal;
-
+matt.forecastscalar=forecastscalar;
 end
 

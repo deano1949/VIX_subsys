@@ -13,7 +13,12 @@ load Sigmaa005_SYS.mat
 load Sigmaa005_FamilySubsys.mat
 %% Setup
 AUM=500000;
-vol_target=0.2;
+Investment_ratio=1.25; % 1 means volatility target @0.2
+gearlimit=15;% Gearing ratio limit (optimal @ 15)
+model_version='version_1.04';
+%%
+diversification_multiplier=2; %It is tuned result in order to match the final model volatility to be 20%;
+vol_target=0.2*diversification_multiplier*Investment_ratio;
 listF={'SPX','UKX','CAC','NKY','HIA',...
     'USZC','UKZC','GERZC','JPZC',...
     'WTI','Gold','Coffee'};
@@ -107,8 +112,6 @@ bidask_spread=[BAspread.SPX BAspread.UKX BAspread.CAC BAspread.NKY BAspread.HIA 
 %% Volatility
 volmat(volmat==0)=NaN;
 
-%% Gearing ratio limit
-gearlimit=20;
 %% Trading simulation
 matt= TradeSimT2(AUM,vol_target,contract_size,xmat,xretmat,signalmat,...
     volmat,fxmat,weight,diversifer,bidask_spread,gearlimit);
@@ -117,7 +120,11 @@ matt.timestamp=timestamp;
 timeseriesplot(matt.vol,timestamp)
 
 %% Output
-matt.description='sigma005 unconstraint version';
+matt.setting.gearing_limit=gearlimit;
+matt.setting.investment_ratio=Investment_ratio;
+matt.setting.AUM=AUM;
+
+matt.description=model_version;
 matt.timelog=datestr(now);
 
-save 'sigma005_unconstrained_output.mat' 'matt'
+save(strcat('sigma005_output_',model_version,'.mat'),'matt');

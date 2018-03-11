@@ -88,6 +88,13 @@ CurrentStatus=table;
 CurrentStatus.timestamp=dat.timestamp(end,:);
 CurrentStatus.Combined_signal=SignalTot(end);
 CurrentStatus=horzcat(CurrentStatus,Signal(end,:));
+
+% forecastscalar
+scale(1)=CarryTrade.forecastscalar;
+scale(2)=EWMA_ST.forecastscalar;
+scale(3)=EWMA_MT.forecastscalar;
+scale(4)=EWMA_LT.forecastscalar;
+
 %% Trade simulation
 Subsys=TradeSimT3(x,xret,vol_target,'',SignalTot,bidask_spread);
 Subsys.name=dat.name;
@@ -96,3 +103,4 @@ Subsys.StratSignal=Signal;
 Subsys.timestamp=dat.timestamp;
 Subsys.stratsblending=Blend;
 Subsys.CurrentStatus=CurrentStatus;
+Subsys.forecastscalars=scale;

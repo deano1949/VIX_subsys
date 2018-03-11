@@ -15,7 +15,8 @@ net_expret=carrysignal; %net expected return (annualised carry)
 
 stdev_ret=smartMovingStd(xret,25)*sqrt(250);%annualised stdev/ 25 is recommended
 
-raw_carry=net_expret./stdev_ret; %Vol adjusted raw carry
+% raw_carry=net_expret./stdev_ret; %Vol adjusted raw carry
+raw_carry=net_expret./backshift(1,stdev_ret); %Vol can only be calculated using previous close price (not include current price)
 
 if strcmp(forecastscalar,'')
     forecastscalar=10/mean(abs(raw_carry(~isnan(raw_carry))));
@@ -29,7 +30,7 @@ matt= TradeSimT3(x,xret,vol_target,vol,signal,bidask_spread);
 
 %% Output
 matt.signal=signal;
-
+matt.forecastscalar=forecastscalar;
 
 end
 

@@ -4,6 +4,7 @@
 %system.
 
 %% Load data
+addpath('C:\Users\gly19\Dropbox\GU\1.Investment\4. Alphas (new)\17.Extract_Rollyield\0.Research\VIX\dat');
 load Sigmaa005_FamilySubsys.mat
 
 dir='C:\Spectrion\Data\PriceData\Future_Generic\';
@@ -30,27 +31,27 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
         Subsystem_SPX=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_SPX'))=Subsystem_SPX;
         save Sigmaa005_FamilySubsys.mat FamilySubsys
-%     
-%     %UKX
-% 
-%         dat=EquityData.UKX;
-%         x=dat.Generic123Price.(1);
-%         xret=dat.Generic12Return.(1);
-%         bidask_spread=setting.BidAskSpread.UKX;
-%         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
-%         FamilySubsys.(strcat('Subsystem_UKX'))=Subsystem;
-%         save Sigmaa005_FamilySubsys.mat FamilySubsys
-% 
-%     %CAC
-% 
-%         dat=EquityData.CAC;
-%         x=dat.Generic123Price.(1);
-%         xret=dat.Generic12Return.(1);
-%         bidask_spread=setting.BidAskSpread.CAC;
-%         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
-%         FamilySubsys.(strcat('Subsystem_CAC'))=Subsystem;
-%         save Sigmaa005_FamilySubsys.mat FamilySubsys
-%         
+    
+    %UKX
+
+        dat=EquityData.UKX;
+        x=dat.Generic123Price.(1);
+        xret=dat.Generic12Return.(1);
+        bidask_spread=setting.BidAskSpread.UKX;
+        Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
+        FamilySubsys.(strcat('Subsystem_UKX'))=Subsystem;
+        save Sigmaa005_FamilySubsys.mat FamilySubsys
+
+    %CAC
+
+        dat=EquityData.CAC;
+        x=dat.Generic123Price.(1);
+        xret=dat.Generic12Return.(1);
+        bidask_spread=setting.BidAskSpread.CAC;
+        Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
+        FamilySubsys.(strcat('Subsystem_CAC'))=Subsystem;
+        save Sigmaa005_FamilySubsys.mat FamilySubsys
+        
     %NKY
 
         dat=EquityData.NKY;
