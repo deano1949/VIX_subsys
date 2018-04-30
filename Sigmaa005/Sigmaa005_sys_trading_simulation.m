@@ -16,9 +16,13 @@ AUM=500000;
 Investment_ratio=1.25; % 1 means volatility target @0.2
 gearlimit=15;% Gearing ratio limit (optimal @ 15)
 model_version='version_1.04';
-%%
-diversification_multiplier=2; %It is tuned result in order to match the final model volatility to be 20%;
-vol_target=0.2*diversification_multiplier*Investment_ratio;
+
+%% Mainbody
+Interproduct_diversity_multiplier=2; %Fixed Value
+% diversification multiplier (It is the diversification benefit from trading multiple instruments.)
+%It is tuned result in order to match the final model volatility to be 20%;
+
+vol_target=0.2*Investment_ratio;
 listF={'SPX','UKX','CAC','NKY','HIA',...
     'USZC','UKZC','GERZC','JPZC',...
     'WTI','Gold','Coffee'};
@@ -100,9 +104,6 @@ end
 %% Weights of portfolios
 weight=sys.dailywgts;
 
-%% diversification multiplier
-diversifer=1;
-
 %% bidask spread
 BAspread=setting.BidAskSpread;
 bidask_spread=[BAspread.SPX BAspread.UKX BAspread.CAC BAspread.NKY BAspread.HIA ...
@@ -114,7 +115,7 @@ volmat(volmat==0)=NaN;
 
 %% Trading simulation
 matt= TradeSimT2(AUM,vol_target,contract_size,xmat,xretmat,signalmat,...
-    volmat,fxmat,weight,diversifer,bidask_spread,gearlimit);
+    volmat,fxmat,weight,Interproduct_diversity_multiplier,bidask_spread,gearlimit);
 
 matt.timestamp=timestamp;
 timeseriesplot(matt.vol,timestamp)
