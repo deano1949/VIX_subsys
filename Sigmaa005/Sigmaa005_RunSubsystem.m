@@ -24,7 +24,7 @@ eval(['tunepara=TuningOutput.' name]);
 
 %% Carry Trade
 carrysignal=dat.Carry; %annualised carry
-CarryTrade= Carry(x,xret,carrysignal,bidask_spread,vol_target,vol,forecastscalar);
+CarryTrade= Carry(x,xret,carrysignal,bidask_spread,vol_target,vol,forecastscalar,3);
 %% MACD
     tpewma=table2array(tunepara.EWMAC.Optimal_Parameter); %Optimal parameter for EWMA
     EWMA_ST=EWMAC(x,xret,tpewma(1,1),tpewma(2,1),bidask_spread,vol_target,vol,forecastscalar);

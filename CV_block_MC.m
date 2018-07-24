@@ -24,4 +24,3 @@ for i=1:no
     end
     randgen=[randgen; ceil(LenTS/chuncklen)];
 end
-i

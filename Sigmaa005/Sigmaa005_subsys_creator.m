@@ -50,7 +50,7 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
         bidask_spread=setting.BidAskSpread.CAC;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_CAC'))=Subsystem;
-        save Sigmaa005_FamilySubsys.mat FamilySubsys
+        save Sigmaa005_FamilySubsys_smoothedCarry.mat FamilySubsys
         
     %NKY
 
