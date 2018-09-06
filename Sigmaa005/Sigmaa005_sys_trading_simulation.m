@@ -13,9 +13,9 @@ load Sigmaa005_SYS.mat
 load Sigmaa005_FamilySubsys.mat
 %% Setup
 AUM=500000;
-Investment_ratio=1.25; % 1 means volatility target @0.2
+Investment_ratio=1; % 1 means volatility target @0.2
 gearlimit=15;% Gearing ratio limit (optimal @ 15)
-model_version='version_1.04';
+model_version='version_1.04.20180906';
 
 %% Mainbody
 Interproduct_diversity_multiplier=2; %Fixed Value
@@ -105,8 +105,8 @@ weight=sys.dailywgts;
 
 %% bidask spread
 BAspread=setting.BidAskSpread;
-bidask_spread=[BAspread.SPX BAspread.UKX BAspread.CAC BAspread.NKY BAspread.HIA ...
-    BAspread.USZC BAspread.UKZC BAspread.GERZC BAspread.JPZC ...
+bidask_spread=[BAspread.SPX BAspread.DAX BAspread.CAC BAspread.NKY BAspread.HIA ...
+    BAspread.USZC BAspread.UKZC BAspread.GERZC ...
     BAspread.WTI BAspread.Gold BAspread.Coffee];
 
 %% Volatility
@@ -127,4 +127,11 @@ matt.setting.AUM=AUM;
 matt.description=model_version;
 matt.timelog=datestr(now);
 
+ftsdailypnl=fints(datenum(matt.timestamp,'dd/mm/yyyy'),matt.performance.cumpnl+1);
+ftsmonthlypnl=tomonthly(ftsdailypnl);
+
+matt.performance.monthlypnl=ftsmonthlypnl;
 save(strcat('sigma005_output_',model_version,'.mat'),'matt');
+
+writetable(table(datestr(ftsdailypnl.dates,'dd/mm/yyyy'),fts2mat(ftsdailypnl)),'Master version Performance.xlsx','Sheet','Daily','Range','A1');
+writetable(table(datestr(ftsmonthlypnl.dates,'dd/mm/yyyy'),fts2mat(ftsmonthlypnl)),'Master version Performance.xlsx','Sheet','Monthly','Range','B1');

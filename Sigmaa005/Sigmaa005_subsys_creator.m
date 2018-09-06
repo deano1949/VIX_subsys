@@ -90,8 +90,8 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
     %USZC
 
         dat=Bond10YData.USZC;
-        x=dat.Generic123Price.(2);
-        xret=dat.Generic12Return.(2);
+        x=dat.Generic123Price.(1);
+        xret=dat.Generic12Return.(1);
         x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.USZC;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
@@ -101,8 +101,8 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
     %UKZC
 
         dat=Bond10YData.UKZC;
-        x=dat.Generic123Price.(2);
-        xret=dat.Generic12Return.(2);
+        x=dat.Generic123Price.(1);
+        xret=dat.Generic12Return.(1);
         x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.UKZC;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
@@ -112,8 +112,8 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
     %JPZC
 
         dat=Bond10YData.JPZC;
-        x=dat.Generic123Price.(2);
-        xret=dat.Generic12Return.(2);
+        x=dat.Generic123Price.(1);
+        xret=dat.Generic12Return.(1);
         x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.JPZC;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
@@ -123,8 +123,8 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
     %GERZC
 
         dat=Bond10YData.GERZC;
-        x=dat.Generic123Price.(2);
-        xret=dat.Generic12Return.(2);
+        x=dat.Generic123Price.(1);
+        xret=dat.Generic12Return.(1);
         x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.GERZC;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
