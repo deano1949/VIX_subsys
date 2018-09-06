@@ -24,9 +24,9 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
     %SPX
 
         dat=EquityData.SPX;
-        x=EquityData.SPX.Generic123Price.SP1_Index;
-        xret=EquityData.SPX.Generic12Return.G1ret;
-        x=ret2tick(xret,100);x=x(2:end);
+        x=dat.Generic123Price.(1);
+        xret=dat.Generic12Return.(1);
+        x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.SPX;
         Subsystem_SPX=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_SPX'))=Subsystem_SPX;
@@ -37,26 +37,40 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
         dat=EquityData.UKX;
         x=dat.Generic123Price.(1);
         xret=dat.Generic12Return.(1);
+        x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.UKX;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_UKX'))=Subsystem;
         save Sigmaa005_FamilySubsys.mat FamilySubsys
 
-    %CAC
+    %DAX
+
+        dat=EquityData.DAX;
+        x=dat.Generic123Price.(1);
+        xret=dat.Generic12Return.(1);
+        x=ret2tick(xret,x(1));x=x(2:end);
+        bidask_spread=setting.BidAskSpread.DAX;
+        Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
+        FamilySubsys.(strcat('Subsystem_DAX'))=Subsystem;
+        save Sigmaa005_FamilySubsys.mat FamilySubsys
+    
+        %CAC
 
         dat=EquityData.CAC;
         x=dat.Generic123Price.(1);
         xret=dat.Generic12Return.(1);
+        x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.CAC;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_CAC'))=Subsystem;
-        save Sigmaa005_FamilySubsys_smoothedCarry.mat FamilySubsys
+        save Sigmaa005_FamilySubsys.mat FamilySubsys
         
     %NKY
 
         dat=EquityData.NKY;
         x=dat.Generic123Price.(1);
         xret=dat.Generic12Return.(1);
+        x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.NKY;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_NKY'))=Subsystem;
@@ -67,16 +81,18 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
         dat=EquityData.HIA;
         x=dat.Generic123Price.(1);
         xret=dat.Generic12Return.(1);
+        x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.HIA;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_HIA'))=Subsystem;
         save Sigmaa005_FamilySubsys.mat FamilySubsys
-
+%% Fixed Income (10 Years)
     %USZC
 
         dat=Bond10YData.USZC;
-        x=dat.Generic123Price.(1);
-        xret=dat.Generic12Return.(1);
+        x=dat.Generic123Price.(2);
+        xret=dat.Generic12Return.(2);
+        x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.USZC;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_USZC'))=Subsystem;
@@ -85,8 +101,9 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
     %UKZC
 
         dat=Bond10YData.UKZC;
-        x=dat.Generic123Price.(1);
-        xret=dat.Generic12Return.(1);
+        x=dat.Generic123Price.(2);
+        xret=dat.Generic12Return.(2);
+        x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.UKZC;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_UKZC'))=Subsystem;
@@ -95,8 +112,9 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
     %JPZC
 
         dat=Bond10YData.JPZC;
-        x=dat.Generic123Price.(1);
-        xret=dat.Generic12Return.(1);
+        x=dat.Generic123Price.(2);
+        xret=dat.Generic12Return.(2);
+        x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.JPZC;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_JPZC'))=Subsystem;
@@ -105,18 +123,22 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
     %GERZC
 
         dat=Bond10YData.GERZC;
-        x=dat.Generic123Price.(1);
-        xret=dat.Generic12Return.(1);
+        x=dat.Generic123Price.(2);
+        xret=dat.Generic12Return.(2);
+        x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.GERZC;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_GERZC'))=Subsystem;
         save Sigmaa005_FamilySubsys.mat FamilySubsys
 
+%% Commodity
+        
     %WTI
 
         dat=ComdtyData.WTI;
-        x=dat.Generic123Price.(1);
-        xret=dat.Generic12Return.(1);
+        x=dat.Generic123Price.(2);
+        xret=dat.Generic12Return.(2);
+        x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.WTI;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_WTI'))=Subsystem;
@@ -125,8 +147,9 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
     %GOLD
 
         dat=ComdtyData.Gold;
-        x=dat.Generic123Price.(1);
-        xret=dat.Generic12Return.(1);
+        x=dat.Generic123Price.(2);
+        xret=dat.Generic12Return.(2);
+        x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.Gold;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_Gold'))=Subsystem;
@@ -135,8 +158,9 @@ blend_type='Boostrap';%'Boostrap' or 'Naive'
     %Coffee
 
         dat=ComdtyData.Coffee;
-        x=dat.Generic123Price.(1);
-        xret=dat.Generic12Return.(1);
+        x=dat.Generic123Price.(2);
+        xret=dat.Generic12Return.(2);
+        x=ret2tick(xret,x(1));x=x(2:end);
         bidask_spread=setting.BidAskSpread.Coffee;
         Subsystem=Sigmaa005_RunSubsystem(dat,x,xret,bidask_spread,vol_target,vol,blend_type);
         FamilySubsys.(strcat('Subsystem_Coffee'))=Subsystem;

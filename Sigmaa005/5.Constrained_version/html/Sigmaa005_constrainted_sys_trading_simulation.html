@@ -1,0 +1,292 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Sigmaa005_constrainted_sys_trading_simulation</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-11-22"><meta name="DC.source" content="Sigmaa005_constrainted_sys_trading_simulation.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1></h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Description: Trade simulation for THE SYSTEM</a></li><li><a href="#2">load data</a></li><li><a href="#3">Setup</a></li><li><a href="#4">subsystem</a></li><li><a href="#5">FX</a></li><li><a href="#6">Weights of portfolios</a></li><li><a href="#7">diversification multiplier</a></li><li><a href="#8">bidask spread</a></li><li><a href="#9">Volatility</a></li><li><a href="#10">Gearing ratio limit</a></li><li><a href="#11">Trading simulation</a></li><li><a href="#12">Output</a></li></ul></div><h2>Description: Trade simulation for THE SYSTEM<a name="1"></a></h2><h2>load data<a name="2"></a></h2><pre class="codeinput">addpath(<span class="string">'C:\Users\gly19\Dropbox\GU\1.Investment\4. Alphas (new)\17.Extract_Rollyield\0.Research\VIX\dat\Sigmaa005'</span>)
+dir=<span class="string">'C:\Spectrion\Data\PriceData\Future_Generic\'</span>;
+load(strcat(dir,<span class="string">'EquityData_RollT-1.mat'</span>));
+load(strcat(dir,<span class="string">'Bond10YData_RollT-1.mat'</span>));
+load(strcat(dir,<span class="string">'ComdtyData_RollT-1.mat'</span>));
+load(strcat(dir,<span class="string">'CurrencyData_RollT-1.mat'</span>));
+load(<span class="string">'Sigmaa005_Setting.mat'</span>);
+load <span class="string">Sigmaa005_SYS.mat</span>
+load <span class="string">Sigmaa005_FamilySubsys.mat</span>
+</pre><h2>Setup<a name="3"></a></h2><pre class="codeinput">AUM=100000000;
+vol_target=0.1;
+listF={<span class="string">'SPX'</span>,<span class="string">'UKX'</span>,<span class="string">'CAC'</span>,<span class="string">'NKY'</span>,<span class="string">'HIA'</span>,<span class="keyword">...</span>
+    <span class="string">'USZC'</span>,<span class="string">'UKZC'</span>,<span class="string">'GERZC'</span>,<span class="string">'JPZC'</span>,<span class="keyword">...</span>
+    <span class="string">'WTI'</span>,<span class="string">'Gold'</span>,<span class="string">'Coffee'</span>};
+listSubsysdat=struct;
+listSubsysdat.(listF{1})=EquityData.SPX;
+listSubsysdat.(listF{2})=EquityData.UKX;
+listSubsysdat.(listF{3})=EquityData.CAC;
+listSubsysdat.(listF{4})=EquityData.NKY;
+listSubsysdat.(listF{5})=EquityData.HIA;
+listSubsysdat.(listF{6})=Bond10YData.USZC;
+listSubsysdat.(listF{7})=Bond10YData.UKZC;
+listSubsysdat.(listF{8})=Bond10YData.GERZC;
+listSubsysdat.(listF{9})=Bond10YData.JPZC;
+listSubsysdat.(listF{10})=ComdtyData.WTI;
+listSubsysdat.(listF{11})=ComdtyData.Gold;
+listSubsysdat.(listF{12})=ComdtyData.Coffee;
+
+contract_size=[50 1000 10 100 10 <span class="keyword">...</span>
+    1000 1000 1000 100000 <span class="keyword">...</span>
+    500 10 37500]; <span class="comment">%dummy to be automate</span>
+
+timestamp=setting.timestamp;
+timenum=datenum(timestamp,<span class="string">'dd/mm/yyyy'</span>);
+</pre><h2>subsystem<a name="4"></a></h2><pre class="codeinput">xmat=NaN(size(timenum,1),size(listF,2));
+xretmat=NaN(size(timenum,1),size(listF,2));
+signalmat=NaN(size(timenum,1),size(listF,2));
+volmat=NaN(size(timenum,1),size(listF,2));
+namefld=fieldnames(FamilySubsys);
+<span class="keyword">for</span> i=1:length(listF)
+    subsysdat=listSubsysdat.(listF{i});
+    subsys=FamilySubsys.(namefld{i});
+    xts=tsvlookup(timenum,datenum(subsysdat.timestamp,<span class="string">'dd/mm/yyyy'</span>),subsysdat.Generic123Price.(1)); <span class="comment">%vlookup on timenum</span>
+    xmat(:,i)=xts(:,2);
+    xretts=tsvlookup(timenum,datenum(subsysdat.timestamp,<span class="string">'dd/mm/yyyy'</span>),subsysdat.Generic12Return.(1)); <span class="comment">%vlookup on timenum</span>
+    xretmat(:,i)=xretts(:,2);
+    signalts=tsvlookup(timenum,datenum(subsys.timestamp,<span class="string">'dd/mm/yyyy'</span>),subsys.Signal);
+    signalmat(:,i)=signalts(:,2);
+    volts=tsvlookup(timenum,datenum(subsysdat.timestamp,<span class="string">'dd/mm/yyyy'</span>),smartMovingStd(subsysdat.Generic12Return.(1),25));
+    volmat(:,i)=volts(:,2);
+<span class="keyword">end</span>
+</pre><h2>FX<a name="5"></a></h2><pre class="codeinput">curnyF={<span class="string">'USD'</span>,<span class="string">'GBPUSD'</span>,<span class="string">'EURUSD'</span>,<span class="string">'JPYUSD'</span>,<span class="string">'HKDUSD'</span>,<span class="keyword">...</span>
+    <span class="string">'USD'</span>,<span class="string">'GBPUSD'</span>,<span class="string">'EURUSD'</span>,<span class="string">'JPYUSD'</span>,<span class="keyword">...</span>
+    <span class="string">'USD'</span>,<span class="string">'USD'</span>,<span class="string">'USD'</span>};
+curnydat.GBPUSD=CurrencyData.GBPUSD;
+curnydat.EURUSD=CurrencyData.EURUSD;
+curnydat.JPYUSD=CurrencyData.JPYUSD;
+
+fxmat=NaN(size(timenum,1),size(curnyF,2));
+<span class="keyword">for</span> j=1:length(curnyF)
+    ccy=curnyF{j};
+    <span class="keyword">switch</span> ccy
+        <span class="keyword">case</span> <span class="string">'USD'</span>
+            fx=ones(size(timenum,1),1);
+        <span class="keyword">case</span> <span class="string">'GBPUSD'</span>
+            fxsys=curnydat.GBPUSD;
+            fx=tsvlookup(timenum,datenum(fxsys.timestamp,<span class="string">'dd/mm/yyyy'</span>),fxsys.Generic123Price.(1));
+            fx=fx(:,2);
+        <span class="keyword">case</span> <span class="string">'EURUSD'</span>
+            fxsys=curnydat.EURUSD;
+            fx=tsvlookup(timenum,datenum(fxsys.timestamp,<span class="string">'dd/mm/yyyy'</span>),fxsys.Generic123Price.(1));
+            fx=fx(:,2);
+        <span class="keyword">case</span> <span class="string">'JPYUSD'</span>
+            fxsys=curnydat.JPYUSD;
+            fx=tsvlookup(timenum,datenum(fxsys.timestamp,<span class="string">'dd/mm/yyyy'</span>),fxsys.Generic123Price.(1));
+            fx=fx(:,2);
+        <span class="keyword">case</span> <span class="string">'HKDUSD'</span>
+            fx=0.1282.*ones(size(timenum,1),1);
+
+    <span class="keyword">end</span>
+    fxmat(:,j)=fx;
+<span class="keyword">end</span>
+</pre><h2>Weights of portfolios<a name="6"></a></h2><pre class="codeinput">weight=sys.dailywgts;
+</pre><h2>diversification multiplier<a name="7"></a></h2><pre class="codeinput">diversifer=2;
+</pre><h2>bidask spread<a name="8"></a></h2><pre class="codeinput">BAspread=setting.BidAskSpread;
+bidask_spread=[BAspread.SPX BAspread.UKX BAspread.CAC BAspread.NKY BAspread.HIA <span class="keyword">...</span>
+    BAspread.USZC BAspread.UKZC BAspread.GERZC BAspread.JPZC <span class="keyword">...</span>
+    BAspread.WTI BAspread.Gold BAspread.Coffee];
+</pre><h2>Volatility<a name="9"></a></h2><pre class="codeinput">volmat(volmat==0)=NaN;
+</pre><h2>Gearing ratio limit<a name="10"></a></h2><pre class="codeinput">gearlimit=4;
+</pre><h2>Trading simulation<a name="11"></a></h2><pre class="codeinput">matt= TradeSimT2(AUM,vol_target,contract_size,xmat,xretmat,signalmat,<span class="keyword">...</span>
+    volmat,fxmat,weight,diversifer,bidask_spread,gearlimit);
+
+matt.timestamp=timestamp;
+</pre><h2>Output<a name="12"></a></h2><pre class="codeinput">matt.description=<span class="string">'sigma005 constrainted version with gearing ratio limit capped at 2'</span>;
+matt.timelog=datestr(now);
+
+save <span class="string">'sigma005_constrainted_output.mat'</span> <span class="string">'matt'</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+
+%% Description: Trade simulation for THE SYSTEM
+
+%% load data
+addpath('C:\Users\gly19\Dropbox\GU\1.Investment\4. Alphas (new)\17.Extract_Rollyield\0.Research\VIX\dat\Sigmaa005')
+dir='C:\Spectrion\Data\PriceData\Future_Generic\';
+load(strcat(dir,'EquityData_RollT-1.mat'));
+load(strcat(dir,'Bond10YData_RollT-1.mat'));
+load(strcat(dir,'ComdtyData_RollT-1.mat'));
+load(strcat(dir,'CurrencyData_RollT-1.mat'));
+load('Sigmaa005_Setting.mat');
+load Sigmaa005_SYS.mat
+load Sigmaa005_FamilySubsys.mat
+%% Setup
+AUM=100000000;
+vol_target=0.1;
+listF={'SPX','UKX','CAC','NKY','HIA',...
+    'USZC','UKZC','GERZC','JPZC',...
+    'WTI','Gold','Coffee'};
+listSubsysdat=struct;
+listSubsysdat.(listF{1})=EquityData.SPX;
+listSubsysdat.(listF{2})=EquityData.UKX;
+listSubsysdat.(listF{3})=EquityData.CAC;
+listSubsysdat.(listF{4})=EquityData.NKY;
+listSubsysdat.(listF{5})=EquityData.HIA;
+listSubsysdat.(listF{6})=Bond10YData.USZC;
+listSubsysdat.(listF{7})=Bond10YData.UKZC;
+listSubsysdat.(listF{8})=Bond10YData.GERZC;
+listSubsysdat.(listF{9})=Bond10YData.JPZC;
+listSubsysdat.(listF{10})=ComdtyData.WTI;
+listSubsysdat.(listF{11})=ComdtyData.Gold;
+listSubsysdat.(listF{12})=ComdtyData.Coffee;
+
+contract_size=[50 1000 10 100 10 ...
+    1000 1000 1000 100000 ...
+    500 10 37500]; %dummy to be automate
+
+timestamp=setting.timestamp;
+timenum=datenum(timestamp,'dd/mm/yyyy');
+
+
+%% subsystem
+xmat=NaN(size(timenum,1),size(listF,2));
+xretmat=NaN(size(timenum,1),size(listF,2));
+signalmat=NaN(size(timenum,1),size(listF,2));
+volmat=NaN(size(timenum,1),size(listF,2));
+namefld=fieldnames(FamilySubsys);
+for i=1:length(listF)
+    subsysdat=listSubsysdat.(listF{i});
+    subsys=FamilySubsys.(namefld{i});
+    xts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),subsysdat.Generic123Price.(1)); %vlookup on timenum
+    xmat(:,i)=xts(:,2);
+    xretts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),subsysdat.Generic12Return.(1)); %vlookup on timenum
+    xretmat(:,i)=xretts(:,2);
+    signalts=tsvlookup(timenum,datenum(subsys.timestamp,'dd/mm/yyyy'),subsys.Signal);
+    signalmat(:,i)=signalts(:,2);
+    volts=tsvlookup(timenum,datenum(subsysdat.timestamp,'dd/mm/yyyy'),smartMovingStd(subsysdat.Generic12Return.(1),25));
+    volmat(:,i)=volts(:,2);
+end
+
+
+%% FX
+curnyF={'USD','GBPUSD','EURUSD','JPYUSD','HKDUSD',...
+    'USD','GBPUSD','EURUSD','JPYUSD',...
+    'USD','USD','USD'};
+curnydat.GBPUSD=CurrencyData.GBPUSD;
+curnydat.EURUSD=CurrencyData.EURUSD;
+curnydat.JPYUSD=CurrencyData.JPYUSD;
+
+fxmat=NaN(size(timenum,1),size(curnyF,2));
+for j=1:length(curnyF)
+    ccy=curnyF{j};
+    switch ccy
+        case 'USD'
+            fx=ones(size(timenum,1),1);
+        case 'GBPUSD'
+            fxsys=curnydat.GBPUSD;
+            fx=tsvlookup(timenum,datenum(fxsys.timestamp,'dd/mm/yyyy'),fxsys.Generic123Price.(1));
+            fx=fx(:,2);
+        case 'EURUSD'
+            fxsys=curnydat.EURUSD;
+            fx=tsvlookup(timenum,datenum(fxsys.timestamp,'dd/mm/yyyy'),fxsys.Generic123Price.(1));
+            fx=fx(:,2);
+        case 'JPYUSD'
+            fxsys=curnydat.JPYUSD;
+            fx=tsvlookup(timenum,datenum(fxsys.timestamp,'dd/mm/yyyy'),fxsys.Generic123Price.(1));
+            fx=fx(:,2);
+        case 'HKDUSD'
+            fx=0.1282.*ones(size(timenum,1),1);
+             
+    end
+    fxmat(:,j)=fx;
+end
+
+%% Weights of portfolios
+weight=sys.dailywgts;
+
+%% diversification multiplier
+diversifer=2;
+
+%% bidask spread
+BAspread=setting.BidAskSpread;
+bidask_spread=[BAspread.SPX BAspread.UKX BAspread.CAC BAspread.NKY BAspread.HIA ...
+    BAspread.USZC BAspread.UKZC BAspread.GERZC BAspread.JPZC ...
+    BAspread.WTI BAspread.Gold BAspread.Coffee];
+
+%% Volatility
+volmat(volmat==0)=NaN;
+
+%% Gearing ratio limit
+gearlimit=4;
+%% Trading simulation
+matt= TradeSimT2(AUM,vol_target,contract_size,xmat,xretmat,signalmat,...
+    volmat,fxmat,weight,diversifer,bidask_spread,gearlimit);
+
+matt.timestamp=timestamp;
+
+%% Output
+matt.description='sigma005 constrainted version with gearing ratio limit capped at 2';
+matt.timelog=datestr(now);
+
+save 'sigma005_constrainted_output.mat' 'matt'
+##### SOURCE END #####
+--></body></html>

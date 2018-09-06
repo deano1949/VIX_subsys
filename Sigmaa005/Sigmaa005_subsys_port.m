@@ -8,22 +8,23 @@ vol_target=setting.target_vol;
 load Sigmaa005_FamilySubsys.mat
 %% Subsystems
 SPXsubsys=FamilySubsys.Subsystem_SPX;
-UKXsubsys=FamilySubsys.Subsystem_UKX;
+DAXsubsys=FamilySubsys.Subsystem_DAX;
+% UKXsubsys=FamilySubsys.Subsystem_UKX;
 CACsubsys=FamilySubsys.Subsystem_CAC;
 NKYsubsys=FamilySubsys.Subsystem_NKY;
 HIAsubsys=FamilySubsys.Subsystem_HIA;
 USZCsubsys=FamilySubsys.Subsystem_USZC;
 UKZCsubsys=FamilySubsys.Subsystem_UKZC;
 GERZCsubsys=FamilySubsys.Subsystem_GERZC;
-JPZCsubsys=FamilySubsys.Subsystem_JPZC;
+% JPZCsubsys=FamilySubsys.Subsystem_JPZC;
 WTIsubsys=FamilySubsys.Subsystem_WTI;
 Goldsubsys=FamilySubsys.Subsystem_Gold;
 Coffeesubsys=FamilySubsys.Subsystem_Coffee;
 
 
 %subsystems' return time series
-MultiSubsysMat=collate(SPXsubsys,UKXsubsys, CACsubsys, NKYsubsys, HIAsubsys,...
-    USZCsubsys, UKZCsubsys, GERZCsubsys, JPZCsubsys,...
+MultiSubsysMat=collate(SPXsubsys,DAXsubsys,CACsubsys, NKYsubsys, HIAsubsys,...
+    USZCsubsys, UKZCsubsys, GERZCsubsys,...
     WTIsubsys, Goldsubsys, Coffeesubsys); 
  
 %generate weights of subsystems

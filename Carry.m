@@ -32,9 +32,11 @@ end
 stdev_ret=smartMovingStd(xret,25)*sqrt(250);%annualised stdev/ 25 is recommended
 
 raw_carry=net_expret./backshift(1,stdev_ret); %Vol can only be calculated using previous close price (not include current price)
+raw_carry(raw_carry>median(raw_carry)+3*smartstd(raw_carry))=median(raw_carry)+3*smartstd(raw_carry); %limit the extremes
+raw_carry(raw_carry<median(raw_carry)-3*smartstd(raw_carry))=median(raw_carry)-3*smartstd(raw_carry);
 
 if strcmp(forecastscalar,'')
-    forecastscalar=10/mean(abs(raw_carry(~isnan(raw_carry))));
+    forecastscalar=10/smartmean(abs(raw_carry(~isnan(raw_carry))));
 end
 
 signal=raw_carry*forecastscalar;

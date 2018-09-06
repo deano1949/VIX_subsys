@@ -1,8 +1,5 @@
-Amyaddpath('Home');
-
 %List of strategies
-StratName={'EWMAC_2_8','EWMAC_4_16','EWMAC_8_32','EWMAC_16_64','EWMAC_32_128','EWMAC_64_256',...
-      'carry'};
+StratName={'carry','EWMAC_ST','EWMAC_MT','EWMAC_LT'};
 
   
 %Forecast Scalar--------------------------------
@@ -29,7 +26,8 @@ setting.Turnover=table(EWMAC_2_8,EWMAC_4_16,EWMAC_8_32,EWMAC_16_64,EWMAC_32_128,
 setting.target_vol=0.2; %target volatility
 
 %Trading Timestamp 
-load EquityData_RollT-1.mat
+dir='C:\Spectrion\Data\PriceData\Future_Generic\';
+load(strcat(dir,'equitydata_rollt-1.mat'));
 setting.timestamp=EquityData.SPX.timestamp;
 
 %% Bid_ask_spread_%

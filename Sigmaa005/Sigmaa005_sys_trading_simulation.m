@@ -23,26 +23,25 @@ Interproduct_diversity_multiplier=2; %Fixed Value
 %It is tuned result in order to match the final model volatility to be 20%;
 
 vol_target=0.2*Investment_ratio;
-listF={'SPX','UKX','CAC','NKY','HIA',...
-    'USZC','UKZC','GERZC','JPZC',...
+listF={'SPX','DAX','CAC','NKY','HIA',...
+    'USZC','UKZC','GERZC',...
     'WTI','Gold','Coffee'};
 listSubsysdat=struct;
 listSubsysdat.(listF{1})=EquityData.SPX;
-listSubsysdat.(listF{2})=EquityData.UKX;
+listSubsysdat.(listF{2})=EquityData.DAX;
 listSubsysdat.(listF{3})=EquityData.CAC;
 listSubsysdat.(listF{4})=EquityData.NKY;
 listSubsysdat.(listF{5})=EquityData.HIA;
 listSubsysdat.(listF{6})=Bond10YData.USZC;
 listSubsysdat.(listF{7})=Bond10YData.UKZC;
 listSubsysdat.(listF{8})=Bond10YData.GERZC;
-listSubsysdat.(listF{9})=Bond10YData.JPZC;
-listSubsysdat.(listF{10})=ComdtyData.WTI;
-listSubsysdat.(listF{11})=ComdtyData.Gold;
-listSubsysdat.(listF{12})=ComdtyData.Coffee;
+listSubsysdat.(listF{9})=ComdtyData.WTI;
+listSubsysdat.(listF{10})=ComdtyData.Gold;
+listSubsysdat.(listF{11})=ComdtyData.Coffee;
 
-contract_size=[50 1000 10 100 10 ...
-    1000 1000 1000 100000 ...
-    500 10 37500]; %dummy to be automate
+contract_size=[50 25 10 100 10 ...
+    1000 1000 1000 ...
+    500 10 37500]; 
 
 timestamp=setting.timestamp;
 timenum=datenum(timestamp,'dd/mm/yyyy');
@@ -69,8 +68,8 @@ end
 
 
 %% FX
-curnyF={'USD','GBPUSD','EURUSD','JPYUSD','HKDUSD',...
-    'USD','GBPUSD','EURUSD','JPYUSD',...
+curnyF={'USD','EURUSD','EURUSD','JPYUSD','HKDUSD',...
+    'USD','GBPUSD','EURUSD',...
     'USD','USD','USD'};
 curnydat.GBPUSD=CurrencyData.GBPUSD;
 curnydat.EURUSD=CurrencyData.EURUSD;

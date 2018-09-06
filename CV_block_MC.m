@@ -5,16 +5,16 @@ function mat=CV_block_MC(ts,xunits,LenTS)
 %          LenTS: length (in days) of output simulations
 %Output:   mat: simulated time series
 if size(ts,1)<LenTS
-    LenTS=floor(ts/5);
+    LenTS=floor(size(ts,1)/5);
 end
 no=xunits/20;
 mat=struct;
 randgen=[];
 for i=1:no
-    if size(ts,1)<LenTS
+    try
         chuncklen=randi([4,floor(LenTS/10)]);
-    else
-        chuncklen=randi([4,floor(LenTS/10)]); %uniformly selected width of a chunck
+    catch
+        chuncklen=randi([floor(LenTS/10),4]); %uniformly selected width of a chunck
     end
 
     submat=CV_block(ts,20,floor(size(ts,1)/chuncklen),ceil(LenTS/chuncklen),i);

@@ -167,20 +167,20 @@ eqbmkdat=EquityData.EWIndex.Generic12Return.G1ret; %bmk return
 % DynamicsTuningOutput.TuneCopper=TuneCopper
 % save('Tuning analysis/DynamicsTuningOutput.mat','DynamicsTuningOutput');
 % 
-% %% Coffee
-% 
-% Coffeepricedat=ComdtyData.Coffee.Generic123Price.KC1_Comdty; %price
-% Coffeeretdat=ComdtyData.Coffee.Generic12Return.G1ret; %return
-% bidaskspread=setting.BidAskSpread.Coffee;
-% sz=size(Coffeeretdat,1);
-% 
-% for endpt=2500:500:sz
-%     [Tune.EWMAC.Optimal_Parameter,~,Tune.EWMAC.meansharpe]=EWMAC_Tuning(Coffeeretdat(1:endpt),bidaskspread);
-%     nm=strcat('win',num2str(floor(endpt/250)));
-%     TuneCoffee.(nm)=Tune;
-% end
-% DynamicsTuningOutput.TuneCoffee=TuneCoffee
-% save('Tuning analysis/DynamicsTuningOutput.mat','DynamicsTuningOutput');
+%% Coffee
+
+Coffeepricedat=ComdtyData.Coffee.Generic123Price.KC1_Comdty; %price
+Coffeeretdat=ComdtyData.Coffee.Generic12Return.G1ret; %return
+bidaskspread=setting.BidAskSpread.Coffee;
+sz=size(Coffeeretdat,1);
+
+for endpt=2500:500:sz
+    [Tune.EWMAC.Optimal_Parameter,~,Tune.EWMAC.meansharpe]=EWMAC_Tuning(Coffeeretdat(1:endpt),bidaskspread);
+    nm=strcat('win',num2str(floor(endpt/250)));
+    TuneCoffee.(nm)=Tune;
+end
+DynamicsTuningOutput.TuneCoffee=TuneCoffee
+save('Tuning analysis/DynamicsTuningOutput.mat','DynamicsTuningOutput');
 
 %% Fixed Income %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 fibmkdat=Bond10YData.EWIndex.Generic12Return.G1ret; %bmk return
