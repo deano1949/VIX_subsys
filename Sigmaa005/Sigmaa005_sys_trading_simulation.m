@@ -2,7 +2,7 @@
 %% Description: Trade simulation for THE SYSTEM
 
 %% load data
-
+clc;clear;
 dir='C:\Spectrion\Data\PriceData\Future_Generic\';
 load(strcat(dir,'EquityData_RollT-1.mat'));
 load(strcat(dir,'Bond10YData_RollT-1.mat'));
@@ -15,7 +15,7 @@ load Sigmaa005_FamilySubsys.mat
 AUM=500000;
 Investment_ratio=1; % 1 means volatility target @0.2
 gearlimit=15;% Gearing ratio limit (optimal @ 15)
-model_version='version_1.04.20180906';
+model_version='version_1.04.20180909';
 
 %% Mainbody
 Interproduct_diversity_multiplier=2; %Fixed Value
@@ -102,7 +102,11 @@ end
 
 %% Weights of portfolios
 weight=sys.dailywgts;
-
+optwgt_lastday=size(weight,1); %Extend the last calculated optimal weighting to the lastest day
+latestday=size(timenum,1);
+if optwgt_lastday<latestday
+    weight(optwgt_lastday+1:latestday,:)=repmat(weight(end,:),latestday-optwgt_lastday,1);
+end
 %% bidask spread
 BAspread=setting.BidAskSpread;
 bidask_spread=[BAspread.SPX BAspread.DAX BAspread.CAC BAspread.NKY BAspread.HIA ...

@@ -7,7 +7,7 @@ function output = collate(subsys1,subsys2,varargin)
 %% Load timestamp
 
 load Setting.mat
-timestamp=setting.timestamp;
+timestamp=subsys1.timestamp;
 
 timenum=datenum(timestamp,'dd/mm/yyyy');
 t1=datenum(subsys1.timestamp,'dd/mm/yyyy');
